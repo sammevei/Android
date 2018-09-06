@@ -1,1 +1,3 @@
-# Android_v3
+# Android
+
+Android frontend for the ride sharing services provided by SammeVei.
