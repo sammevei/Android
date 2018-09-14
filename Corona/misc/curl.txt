@@ -1,0 +1,18 @@
+curl -X GET \
+  -H "X-Parse-Application-Id: iQUz7iUAxYdSDRKauCGcpTWaw2bMtg00Knebh3gz" \
+  -H "X-Parse-REST-API-Key: 4a52A4Xc7a30495TRb2d2Z172oKl72537c6d682c" \
+  -H "X-Parse-Revocable-Session: 1" \
+  -G \
+  --data-urlencode 'username=petrsvar@gmail.com' \
+  --data-urlencode 'password=q' \
+  https://devapi.sammevei.no/parse/login
+
+
+
+  curl -X POST \
+  -H "X-Parse-Application-Id: iQUz7iUAxYdSDRKauCGcpTWaw2bMtg00Knebh3gz" \
+  -H "X-Parse-REST-API-Key: ${4a52A4Xc7a30495TRb2d2Z172oKl72537c6d682c}" \
+  -H "X-Parse-Revocable-Session: 1" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"cooldude6","password":"p_n7!-e8","phone":"415-392-0202"}' \
+  https://devapi.sammevei.no/parse/users

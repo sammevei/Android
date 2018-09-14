@@ -1,0 +1,54 @@
+settings =
+{
+    splashScreen = 
+    {
+        enable = false
+    },
+
+    orientation = {
+        default = "portrait",
+        supported =
+        { "portrait"},
+    },
+
+    plugins =
+    {
+        -- ["plugin.notifications.v2"] = {
+        -- publisherId = "com.coronalabs"
+        -- },
+
+        -- key is the name passed to Lua's 'require()'
+        -- ["plugin.parse"] = {
+        --    publisherId = "com.develephant",
+        -- },
+
+        -- ["plugin.stripe"] = {
+        --     publisherId = "com.jasonschroeder",
+        -- },
+
+        -- ["plugin.facebook.v4a"] = {
+        --     publisherId = "com.coronalabs"
+        -- },
+    }, 
+
+
+	android =
+	{
+        -- versionCode = "4023", -- this is version 4.023
+        versionCode = "22", -- this is version 22.0
+        -- versionCode = "3438", -- this is version 3.438
+        
+		useGoogleServicesJson = false,
+        usesPermissions =
+		{
+			"android.permission.INTERNET",
+            "android.permission.CALL_PHONE",
+            "android.permission.SEND_SMS",
+            "android.permission.RECEIVE_BOOT_COMPLETED",
+            "android.permission.ACCESS_FINE_LOCATION",
+            "android.permission.ACCESS_COARSE_LOCATION",
+            "android.permission.CAMERA",
+            "android.permission.WRITE_EXTERNAL_STORAGE"
+		},
+	},  -- end Android
+}

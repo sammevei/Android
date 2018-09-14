@@ -1,0 +1,9 @@
+NOTIFICATION
+d1.messageTo(5912, 'Notification 1')
+
+DATA
+d1.messageTo(5912, null, { type:'message', body:'Hello!' })
+
+
+NOTIFICATION + DATA
+d1.messageTo(5912, 'Notification 1', { type:'message', body:'Hello!' })

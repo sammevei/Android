@@ -1,0 +1,107 @@
+{
+  "project_info": {
+    "project_number": "398792824806",
+    "firebase_url": "https://sammevei-171607.firebaseio.com",
+    "project_id": "sammevei-171607",
+    "storage_bucket": "sammevei-171607.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398792824806:android:282d2b831c30079d",
+        "android_client_info": {
+          "package_name": "com.sammevei.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "398792824806-bpi7k9l9v6ji3lnnei9nasolkceja6mc.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "398792824806-5dukj5gqljlanql4dp0rt94d6t8rtj01.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "398792824806-lac2ptiaf4d13pb9olshh296cafkc2kj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sammevei.app",
+            "certificate_hash": "42ebbb4a53f5a4629f1dee5498b3b312f082e3d4"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJS0w8BUidU_0ij15YBW4_ctp0LtUipKg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "398792824806-bpi7k9l9v6ji3lnnei9nasolkceja6mc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398792824806:android:d4a5dfd0e943f240",
+        "android_client_info": {
+          "package_name": "no.sammevei.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "398792824806-n7g294fld4h5i0t58pvg01qa1sne2v5v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "no.sammevei.app",
+            "certificate_hash": "42ebbb4a53f5a4629f1dee5498b3b312f082e3d4"
+          }
+        },
+        {
+          "client_id": "398792824806-bpi7k9l9v6ji3lnnei9nasolkceja6mc.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "398792824806-5dukj5gqljlanql4dp0rt94d6t8rtj01.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJS0w8BUidU_0ij15YBW4_ctp0LtUipKg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "398792824806-bpi7k9l9v6ji3lnnei9nasolkceja6mc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
