@@ -13,9 +13,9 @@ settings =
 
     plugins =
     {
-        -- ["plugin.notifications.v2"] = {
-        -- publisherId = "com.coronalabs"
-        -- },
+        ["plugin.notifications.v2"] = {
+        publisherId = "com.coronalabs"
+        },
 
         -- key is the name passed to Lua's 'require()'
         -- ["plugin.parse"] = {
@@ -35,10 +35,10 @@ settings =
 	android =
 	{
         -- versionCode = "4023", -- this is version 4.023
-        versionCode = "22", -- this is version 22.0
-        -- versionCode = "3438", -- this is version 3.438
+        -- versionCode = "22", -- this is version 22.0
+        versionCode = "3442", -- this is version 3.442
         
-		useGoogleServicesJson = false,
+		useGoogleServicesJson = true,
         usesPermissions =
 		{
 			"android.permission.INTERNET",
