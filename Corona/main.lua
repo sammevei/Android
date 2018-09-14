@@ -4,16 +4,13 @@
 --
 ---------------------------------------------------------------------------------
 
--- no.sammevei.prototype
--- debug key
--- JSON disabled
--- notifications disabled
+-- no.sammevei.app
 
 local appData = require( "misc.appData" ) 
 
 -- SET THIS ------------------------------------------------------------------- --
 appData.useNotifications = true
-appData.useNotifications = false
+-- appData.useNotifications = false
 
 appData.developerMode = false
 -- ---------------------------------------------------------------------------- --
