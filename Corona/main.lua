@@ -4,13 +4,16 @@
 --
 ---------------------------------------------------------------------------------
 
--- no.sammevei.app
+-- compile with no.sammevei.app
 
 local appData = require( "misc.appData" ) 
 
--- SET THIS ------------------------------------------------------------------- --
-appData.useNotifications = true
--- appData.useNotifications = false
+-- NOTIFICATIONS ------------------------------------------------------------------- --
+if ( system.getInfo( "environment" ) == "simulator" ) then
+	appData.useNotifications = false
+else	
+	appData.useNotifications = true
+end	
 
 appData.developerMode = false
 -- ---------------------------------------------------------------------------- --
