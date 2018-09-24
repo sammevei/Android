@@ -5,8 +5,6 @@ local routines = require( "misc.appRoutines" )
 local model = require("model.CreateTransportModel")
 
 widget.setTheme( "widget_theme_ios7" )
--- widget.setTheme( "widget_theme_android_holo_light" )
--- widget.setTheme( "widget_theme_1" )
 
 local M = {}
 -- -----------------------------------------------------------------------------
@@ -60,11 +58,11 @@ M.myRouteMap = function()
 end
 
 -- -----------------------------------------------------------------------------
--- TRIP CHANGE
+-- TRIP CREATION DETAILS
 -- -----------------------------------------------------------------------------
 
--- Show Trip Change
-M.showTripChange = function(address)
+-- Show Trip Change (trip details for now)
+M.showTransportDetails = function(address)
     -- setup
     M.tripChangeGroup = display.newGroup()
     M.sceneGroup:insert( M.tripChangeGroup )
@@ -298,7 +296,81 @@ M.showTripChange = function(address)
     M.tripRole.y = 80 - 40
     M.tripChangeGroup:insert( M.tripRole ) 
 
-    M.tripChangeGroup.y = -3000  
+    M.tripChangeGroup.y = -3000
+
+    --  Weekdays Switch -------------------------------------------------------------------
+    M.weekdaysSwitch = widget.newSwitch(
+        {
+            left = 0,
+            top = 0,
+            style = "onOff",
+            initialSwitchState = false
+            -- onRelease = morningSwitchListener
+        }
+    )
+
+    M.weekdaysSwitch.anchorX = 0
+    M.weekdaysSwitch.anchorY = 0
+    M.weekdaysSwitch.x = appData.margin*2
+    M.weekdaysSwitch.y = 0 - 55 + 30 + 35 + 35 + 30 + 10        
+    M.weekdaysSwitch:scale(0.6, 0.6)
+    M.weekdaysSwitch.alpha = 0.9
+    M.tripChangeGroup:insert( M.weekdaysSwitch )     
+
+    --  Weekdays Info -------------------------------------------------------------------
+    local weekdaysTextString = "Gjenta for hele arbeidsuken"
+
+    M.weekdaysText = display.newText( 
+        weekdaysTextString, 0, 0, appData.fonts.titleText, 17 )
+
+    M.weekdaysText.anchorX = 0
+    M.weekdaysText.x = appData.margin*2 + 55
+
+    M.weekdaysText.anchorY = 0
+    M.weekdaysText.y = 0 - 55 + 30 + 35 + 35 + 30 + 10
+    M.weekdaysText.fill = appData.colors.actionText
+    M.tripChangeGroup:insert( M.weekdaysText )
+
+
+    --  Weekdays Text -------------------------------------------------------------------
+    local weekdaysTextString = ""
+
+    M.weekdaysTimeText = display.newText( 
+        weekdaysTextString, 0, 0, appData.fonts.actionText, 12 )
+
+    M.weekdaysTimeText.anchorX = 0
+    M.weekdaysTimeText.x = appData.margin*2 + 55
+
+    M.weekdaysTimeText.anchorY = 0
+    M.weekdaysTimeText.y = 0 - 55 + 30 + 35 + 35 + 30 + 30
+    M.weekdaysTimeText.fill = appData.colors.actionComment
+    M.tripChangeGroup:insert( M.weekdaysTimeText )
+
+    -- Week Day
+    local y = 2018 
+    local m = string.sub(M.tripDate.text,4,5)
+    local d = string.sub(M.tripDate.text,1,2)
+    local h = string.sub(M.tripTime.text, 1, 2)
+    local s = tonumber(string.sub(M.tripTime.text, 4, 5))*60 
+
+    local weekDay = routines.localToWeekday(y, m, d, h, s)
+
+    if weekDay == "Mon" then M.weekdaysTimeText.text = "Man, Tir, Ons, Tor, Fre" end
+    if weekDay == "Tue" then M.weekdaysTimeText.text = "Tir, Ons, Tor, Fre" end
+    if weekDay == "Wed" then M.weekdaysTimeText.text = "Ons, Tor, Fre" end
+    if weekDay == "Thu" then M.weekdaysTimeText.text = "Tor, Fre" end
+
+    -- Hide Multiple Trip Option if Fri, Sat or Sun
+    if weekDay == "Fri" or weekDay == "Sat" or weekDay == "Sun" then 
+        M.weekdaysSwitch.alpha = 0
+        M.weekdaysText.alpha = 0
+        M.weekdaysTimeText.alpha = 0
+    else
+        M.weekdaysSwitch.alpha = 1
+        M.weekdaysText.alpha = 1
+        M.weekdaysTimeText.alpha = 1           
+    end
+
 end
 
 M.showWheels = function()
@@ -376,7 +448,7 @@ M.showWheels = function()
             align = "right",
             width = appData.contentW/2,
             labelPadding = 0,
-            startIndex = 4,
+            startIndex = 9,
             labels = {
                 "00", "01", "02", "03", "04", "05", "06",
                 "07", "08", "09", "10", "11", "12",
