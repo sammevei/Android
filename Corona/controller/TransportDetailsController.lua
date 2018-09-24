@@ -21,6 +21,8 @@ local i
 
 local onKeyEvent = function( event )
     if ( event.keyName == "back" ) then
+        appData.transportDetails = 0
+        appData.appIsRunning = true
         appData.composer.hideOverlay()
         return true
     end  
@@ -28,6 +30,8 @@ end
 
 local hideTransportDetails = function(event)
     appData.showingMap = true
+    appData.transportDetails = 0
+    appData.appIsRunning = true
     appData.composer.hideOverlay()
 end
 
@@ -39,6 +43,8 @@ saveTransports = function(event)
     appData.transports = appData.json.decode(event.response) -- [2] load transports from server
     appData.refreshTable = true
     appData.showingMap = true
+    appData.transportDetails = 0
+    appData.appIsRunning = true
     appData.composer.hideOverlay()
 end
 
