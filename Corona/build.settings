@@ -35,8 +35,8 @@ settings =
 	android =
 	{
         -- versionCode = "4023", -- this is version 4.023
-        -- versionCode = "22", -- this is version 22.0
-        versionCode = "3442", -- this is version 3.442
+        -- versionCode = "33", -- this is version 33.0
+        versionCode = "4001", -- this is version 4.0.1
         
 		useGoogleServicesJson = true,
         usesPermissions =
