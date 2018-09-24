@@ -15,6 +15,7 @@ local routines = require( "misc.appRoutines" )
 -- -----------------------------------------------------------------------
 appData.appIsRunning = false
 local snapshot
+local numberOfTransports
 
 local showingNextTrip
 local changing
@@ -177,6 +178,7 @@ local onSwitch
 local onRowBar
 local addTransport
 local showMap
+local uploadMultipleTransports
 
 -- Rating
 local showRating
@@ -198,6 +200,8 @@ composer.recycleOnSceneChange = true
 onKeyEvent = function( event )
     if ( event.keyName == "back" ) then
         appData.showingMap = true
+        appData.creatingTransport = false
+        appData.appIsRunning = true
         appData.composer.hideOverlay()
         return true
     end  
@@ -205,7 +209,10 @@ end
 
 hideTransport = function(event)
     appData.showingMap = true
+    appData.creatingTransport = false
+    appData.appIsRunning = true
     appData.composer.hideOverlay()
+
     if event.phase == "began" then
         event.target.alpha = 0.6
         print("[1]")
@@ -280,7 +287,6 @@ end
 
 -- save transport data when changed
 setTransportData = function(event)
-    -- view.tripChangeGroup.y = display.screenOriginY + 55
     view.departureField.y = 3 - 80
     view.destinationField.y = 48 - 60
 
@@ -303,6 +309,34 @@ setTransportData = function(event)
         transition.to( view.transportDateWheel, { time = 25, y = -3000 } )
         local values = view.transportDateWheel:getValues()
         view.tripDate.text = values[2].value
+
+        -- Week Day
+        local y = 2018 
+        local m = string.sub(view.tripDate.text,4,5)
+        local d = string.sub(view.tripDate.text,1,2)
+        local h = string.sub(view.tripTime.text, 1, 2)
+        local s = tonumber(string.sub(view.tripTime.text, 4, 5))*60 
+
+        local weekDay = routines.localToWeekday(y, m, d, h, s)
+
+        if weekDay == "Mon" then view.weekdaysTimeText.text = "Man, Tir, Ons, Tor, Fre" end
+        if weekDay == "Tue" then view.weekdaysTimeText.text = "Tir, Ons, Tor, Fre" end
+        if weekDay == "Wed" then view.weekdaysTimeText.text = "Ons, Tor, Fre" end
+        if weekDay == "Thu" then view.weekdaysTimeText.text = "Tor, Fre" end
+        if weekDay == "Fri" then view.weekdaysTimeText.text = "" end
+        if weekDay == "Sat" then view.weekdaysTimeText.text = "" end
+        if weekDay == "Sun" then view.weekdaysTimeText.text = "" end
+
+        -- Hide Multiple Trip Option if Fri, Sat or Sun
+        if weekDay == "Fri" or weekDay == "Sat" or weekDay == "Sun" then 
+            view.weekdaysSwitch.alpha = 0
+            view.weekdaysText.alpha = 0
+            view.weekdaysTimeText.alpha = 0
+        else
+            view.weekdaysSwitch.alpha = 1
+            view.weekdaysText.alpha = 1
+            view.weekdaysTimeText.alpha = 1           
+        end
     end    
 
     if view.transportTimeWheel.y ~= -3000 then
@@ -494,7 +528,7 @@ showTransportDateWheel = function(event)
     transition.to( view.whiteBackground, { time = 25, alpha = 1 } )
     transition.to( view.wheelButton, { time = 25, alpha = 1 } ) 
 
-    view.transportDateWheel:selectValue( 2, 3 )
+    view.transportDateWheel:selectValue( 2, 2 )
  
     return true       
 end
@@ -512,6 +546,8 @@ saveTransports = function(event)
     end    
 
     -- hide Create Transport
+    appData.creatingTransport = false
+    appData.appIsRunning = true
     appData.showingMap = true
     appData.composer.hideOverlay()
 end
@@ -1339,12 +1375,17 @@ departureGeoSearch = function(event)
     print("departureGeoSearch")
 
     listNumber = event.target.index
-    view.departureField.text = appData.places[listNumber].description
+    if appData.places[listNumber].description then
+        view.departureField.text = appData.places[listNumber].description
+    end    
 
     print("THIS IS LIST NUMBER:"..listNumber)
     print("place_id:"..appData.places[listNumber].place_id)
 
-    local place_id = appData.places[listNumber].place_id
+    local place_id = ""
+    if appData.places[listNumber].place_id ~= nil then
+        place_id = appData.places[listNumber].place_id
+    end    
 
     -- Make Geo Search String
     local requestString = 
@@ -1355,7 +1396,9 @@ departureGeoSearch = function(event)
         appData.googlePlaces.APIkey
 
     -- Geo Search
-    network.request( requestString, "GET", departureGeoSearchListener )
+    if place_id ~= "" then 
+        network.request( requestString, "GET", departureGeoSearchListener )
+    end    
 
     -- Enable Destination Field
     view.destinationField.x = appData.contentW/2+appData.margin*2
@@ -1663,14 +1706,6 @@ end
 
 
 
-
-
-
-
-
-
-
-
 -- Reset Address ID's
 resetAddressID = function()
 
@@ -1831,14 +1866,16 @@ cancelTransport = function(utcTime)
     end
 end
   
-
 -- finish uploading transport
 transportUploaded = function(event)
     print("-------------------------------------- TRANSPORT UPLOADED ----------------------------------")
     print("TRANSPORT "..event.response)
     print("-------------------------------------- TRANSPORT UPLOADED ----------------------------------")
-
-    view.saveButton:addEventListener( "tap", uploadTransport )  
+    
+    if view.saveButton ~= nil and appData.saveButtonListenerRemoved == true then
+        appData.saveButtonListenerRemoved = false
+        view.saveButton:addEventListener( "tap", uploadTransport ) 
+    end 
 
     local data = appData.json.decode(event.response)
 
@@ -1906,7 +1943,8 @@ uploadTransport = function()
     end    
 
     -- upload transport if everything is ok 
-    view.saveButton:removeEventListener( "tap", uploadTransport )    
+    view.saveButton:removeEventListener( "tap", uploadTransport )
+    appData.saveButtonListenerRemoved = true    
     print("uploading transport")
 
     --prepare data
@@ -1968,88 +2006,80 @@ uploadTransport = function()
     local m = string.sub(view.tripDate.text,4,5)
     local d = string.sub(view.tripDate.text,1,2)
     local h = string.sub(view.tripTime.text, 1, 2)
-    print(string.sub(view.tripTime.text, 4, 5))
     local s = tonumber(string.sub(view.tripTime.text, 4, 5))*60 
 
-    -- utcTime
-    utcTime = routines.localToUTC(y, m, d, h, s)
-    print("[1] ======================= "..utcTime) 
+    -- Week Day
+    local weekDay = routines.localToWeekday(y, m, d, h, s)
+    print("[WEEKDAY] ======================= "..weekDay) 
 
-    --[[
-    local time
-    local t
+    local numberOfTransports = 1
+    if weekDay == "Mon" then numberOfTransports = 5 end
+    if weekDay == "Tue" then numberOfTransports = 4 end
+    if weekDay == "Wed" then numberOfTransports = 3 end
+    if weekDay == "Thu" then numberOfTransports = 2 end
 
-    time = view.tripTime.text
-    t = string.sub(time, 1, 2)
-    t = tonumber(t) - 2
-    t = tostring(t)
-    if string.len(t) == 1 then
-        t = "0"..t
-    end  
-    time =  t..string.sub(time, 3, 5) 
+    if view.weekdaysSwitch.isOn ~= true then numberOfTransports = 1 end
 
-    -- utcTime
-    utcTime = "2018"
-            .."-"
-            ..string.sub(view.tripDate.text,4,5)
-            .."-"
-            ..string.sub(view.tripDate.text,1,2)
-            .."T"
-            ..time
-            ..":00.000Z"
+    for i=1, numberOfTransports do
 
-    print("[2] ======================= "..utcTime)        
-    --]]
+        local day = tonumber(d) + (i - 1)
+        day = tostring(day)
+        if string.len(day) == 1 then day = "0"..day end
 
-    -- flexibility
-    flexibility = string.sub(view.tripTolerance.text, 5, 6)
-    flexibility = tonumber(flexibility)*60
+        -- utcTime
+        utcTime = routines.localToUTC(y, m, day, h, s)
+        print("[1] ======================= "..utcTime) 
 
-    -- set car parameters
-    if mode == "passenger" then
-        vehicle_id = "0"
-        capacity = "1"
-    else
-        vehicle_id = tostring(appData.car.vehicle_id)
-        capacity = "1" 
-    end              
+        -- flexibility
+        flexibility = string.sub(view.tripTolerance.text, 5, 6)
+        flexibility = tonumber(flexibility)*60
 
-    params.body = 
-        'mode='..
-        utils.urlEncode(tostring(mode))..
-        '&'..
-        'from='..
-        utils.urlEncode(fromAddress)..
-        '&'..
-        'to='..
-        utils.urlEncode(toAddress)..
-        '&'..
-        'ts='..
-        utils.urlEncode(utcTime)..
-        '&'..
-        'vehicle_id='..
-        utils.urlEncode(vehicle_id)..
-        '&'..
-        'capacity='..
-        utils.urlEncode(capacity)..
-        '&'..
-        'flexibility='..
-        utils.urlEncode(tostring(flexibility))..
-        '&'..
-        'from_address='..
-        utils.urlEncode(fromStreetAddress)..
-        '&'..
-        'to_address='..
-        utils.urlEncode(toStreetAddress)..
-        '&'..
-        'rate=0'
+        -- set car parameters
+        if mode == "passenger" then
+            vehicle_id = "0"
+            capacity = "1"
+        else
+            vehicle_id = tostring(appData.car.vehicle_id)
+            capacity = "1" 
+        end              
 
-        print(params.body)
+        params.body = 
+            'mode='..
+            utils.urlEncode(tostring(mode))..
+            '&'..
+            'from='..
+            utils.urlEncode(fromAddress)..
+            '&'..
+            'to='..
+            utils.urlEncode(toAddress)..
+            '&'..
+            'ts='..
+            utils.urlEncode(utcTime)..
+            '&'..
+            'vehicle_id='..
+            utils.urlEncode(vehicle_id)..
+            '&'..
+            'capacity='..
+            utils.urlEncode(capacity)..
+            '&'..
+            'flexibility='..
+            utils.urlEncode(tostring(flexibility))..
+            '&'..
+            'from_address='..
+            utils.urlEncode(fromStreetAddress)..
+            '&'..
+            'to_address='..
+            utils.urlEncode(toStreetAddress)..
+            '&'..
+            'rate=0'
 
-    -- send request
-    if fromAddress ~= "0" and toAddress ~= "0" then
-        network.request( url, "POST", transportUploaded, params) 
-    end    
+            print(params.body)
+
+        -- send request
+        if fromAddress ~= "0" and toAddress ~= "0" then
+            network.request( url, "POST", transportUploaded, params) 
+        end
+    end        
 end
 
 
@@ -2090,20 +2120,15 @@ local scene = composer.newScene()
 
 -- create()
 function scene:create( event )
+    appData.creatingTransport = true
     appData.restart = true
     view.sceneGroup = self.view
-
-    -- show trip change menu
-    view.showTripChange()
-
-    -- showPicker Wheels
-    view.showWheels()
 
     print("THE SCENE WAS CREATED")
     
     view.showBackground()
     view.showFooter()
-    view.showTripChange()
+    view.showTransportDetails()
     view.showWheels()
     view.showMap(10.70, 59.95, 10.70, 59.95)
 
@@ -2134,7 +2159,6 @@ function scene:show( event )
         view.backButton:addEventListener( "tap", hideTransport ) 
         view.saveButton:addEventListener( "tap", uploadTransport ) 
 
-
     elseif ( phase == "did" ) then      
     end 
 end
@@ -2161,7 +2185,7 @@ function scene:destroy( event )
     view.sceneGroup = self.view
     -- Code here runs prior to the removal of scene's view
 
-    print("THE CTC WAS DESTROYED")
+    print("THE CTC WAS DESTROYED2")
 end
 
 -- ------------------------------------------------------------------------

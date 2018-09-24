@@ -251,11 +251,18 @@ end
 refreshTable = function()
     if appData.refreshTable == true and appData.transports ~= nil then
 
+        -- hide first trip button
+        if view.firstTransportGroup ~= nil then
+            view.firstTransportGroup.alpha = 0
+        end    
+
+        -- remove old table view
         if  view.transportsTableView ~= nil then
             view.transportsTableView:removeSelf()
             view.transportsTableView = nil
-        end    
+        end 
 
+        -- remove 
         if  view.transportsGroup ~= nil then
             view.transportsGroup:removeSelf()
             view.transportsGroup = nil
@@ -289,7 +296,6 @@ refreshTable = function()
             end
         else
             if view.footerGroup == nil then
-                print("WWwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
                 view.showFirstTransport()
                 view.firstButton:addEventListener( "touch", addTransport ) 
             end
@@ -297,7 +303,10 @@ refreshTable = function()
 
         appData.refreshTable = false
     end 
-    view.transportView:toFront()   
+
+    if view.transportView ~= nil then 
+        view.transportView:toFront()
+    end      
 end
 
 local options = {
@@ -308,6 +317,7 @@ local options = {
 
 onRowBar = function(event)
     print("---------------- ROW BAR -------------------"..event.target.id)
+    appData.transportDetails = event.target.id
     appData.composer.setVariable( "i", event.target.id )
     appData.composer.showOverlay( "controller.TransportDetailsController", options)
 end
@@ -6160,6 +6170,9 @@ function scene:show( event )
 
         view.topBar:addEventListener( "tap", catcher )
         view.topBar:addEventListener( "touch", catcher )
+
+        view.transportBackground:addEventListener( "tap", catcher )
+        view.transportBackground:addEventListener( "touch", catcher )
 
         view.routeMap1:addEventListener( "urlRequest", webListener )
 
