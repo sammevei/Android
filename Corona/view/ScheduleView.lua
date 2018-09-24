@@ -1232,15 +1232,13 @@ M.showTransport = function()
     
 
     -- background 
-    local transportBackground   
-
-    transportBackground = display.newRect( 0, 0, appData.screenW, rowHeight+headerHeight + 200 )
-    transportBackground.fill = appData.colors.actionBackground
-    transportBackground.anchorX = 0
-    transportBackground.anchorY = 0 
-    transportBackground.x = display.screenOriginX 
-    transportBackground.y=0
-    M.transportView:insert( transportBackground ) 
+    M.transportBackground = display.newRect( 0, 0, appData.screenW, rowHeight+headerHeight + 200 )
+    M.transportBackground.fill = appData.colors.actionBackground
+    M.transportBackground.anchorX = 0
+    M.transportBackground.anchorY = 0 
+    M.transportBackground.x = display.screenOriginX 
+    M.transportBackground.y=-5
+    M.transportView:insert( M.transportBackground ) 
     
     -- header
     local transportHeader  
