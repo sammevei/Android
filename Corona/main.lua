@@ -489,6 +489,8 @@ appData.matchFilePath = system.pathForFile( "match.txt", system.DocumentsDirecto
 
 print(appData.user.userName)
 
+appData.transportDetails = 0
+
 -- Hide Status Bar
 display.setStatusBar( display.HiddenStatusBar )
 
@@ -576,15 +578,21 @@ end
 
 local delayedRefresh = function()
 	-- refreshToken()
-
-	if appData.appIsRunning	== false then
-		appData.composer.showOverlay( "controller.OptionsController" ) 
+    if appData.creatingTransport == true then
+    	appData.composer.showOverlay( "controller.CreateTransportController" )
+    elseif appData.transportDetails ~= 0 then
+        appData.composer.setVariable( "i", appData.transportDetails )
+    	appData.composer.showOverlay( "controller.TransportDetailsController", options)	
+	elseif appData.appIsRunning	== false then
+		appData.composer.showOverlay( "controller.OptionsController" )
+    else 	 
     end		
 end	
 
 -- ---------------------------------------------------------------------------------------
 
 appData.restart = false
+appData.creatingTransport = false
 local suspensionTime = 0
 local resumeTime = 0
 local idleTime = 1
@@ -599,7 +607,7 @@ local onResume = function( event )
 			-- native.requestExit()
 		end
  	elseif event.type == "applicationResume" then
- 		print("----------- resume -----------")
+ 		print("! ----------- resume ----------- !")
  		appData.refreshing = true
  		resumeTime = os.time()
  		idleTime = resumeTime - suspensionTime
