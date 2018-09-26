@@ -107,6 +107,28 @@ M.localToUTC = function(y, m, d, h, s)
 	-- return UTC time as string
 	return utcTime
 end
+
+M.localToWeekday = function(y, m, d, h, s)
+
+    -- takes local year, month, day, hour and minutes as numbers or strings, 
+    -- calculates UTC time and outputs in 2018-01-18T07:30:00.000Z format
+
+	local utcTime = ""
+
+	-- translate to seconds
+	local time1 = os.time {
+		year = tonumber(y), 
+		month = tonumber(m), 
+		day = tonumber(d), 
+		hour = tonumber(h), 
+		sec = tonumber(s)
+	}
+
+	local weekDay = os.date("%a", time1)
+
+	-- return UTC time as string
+	return weekDay
+end
 -- -------------------------------------------------------------------------
 
 M.UTCtoLocal = function(utcTime)
@@ -166,6 +188,7 @@ M.minutesToHours = function(time_offset)
         -- return hours:minutes
         return time
 end
+
 
 -- ------------------------------------------------------------------------- --
 -- MAPS

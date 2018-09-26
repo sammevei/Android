@@ -1175,6 +1175,7 @@ function scene:create( event )
     local addressesRegistered = false
     local tokenFound = false
     local userFound = false
+    appData.appIsRunning = true
 
     -- check whether refresh token is stored
     if (tokenFound == false) then

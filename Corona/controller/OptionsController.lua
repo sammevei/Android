@@ -1318,9 +1318,39 @@ local logoutFinished = function(event)
     print("============================")
     print(event.response)
 
+    -- delete refresh token and user
+    local destDir = system.DocumentsDirectory  -- Location where the file is stored
+    local result, reason
+
+    result, reason = os.remove( system.pathForFile( "refreshToken.txt", destDir ) )
+    result, reason = os.remove( system.pathForFile( "user.txt", destDir ) )
+    result, reason = os.remove( system.pathForFile( "firebase.txt", destDir ) )
+
+    appData.showingMap = true
+    appData.transportDetails = 0
+    appData.appIsRunning = true
+
+    -- go to intro
+    -- composer.hideOverlay()
+    composer.removeScene( "controller.OptionsController" )
+    composer.removeScene( "controller.ScheduleController" )               
+    composer.gotoScene("controller.IntroController")
+
+    --[[
+    local data = appData.json.decode(event.response)
+
+    if data == nil then
+        local alert = native.showAlert( 
+            "Ooops. Feil!", 
+            'Vennligst prøv igjen.', 
+            { "OK", "" }
+            ) 
+
+        return true
+    end  
+    --]]
+
     -- delete all the data
-
-
     -- unregister with FCM
     if appData.useNotifications == true then
         -- appData.notifications.deleteDeviceToken()
@@ -1429,19 +1459,6 @@ local logoutNow = function(event)
 
             -- send request
             network.request( url, "POST", logoutFinished, params)                
-
-            -- delete refresh token and user
-            local destDir = system.DocumentsDirectory  -- Location where the file is stored
-            local result, reason
-
-            result, reason = os.remove( system.pathForFile( "refreshToken.txt", destDir ) )
-            result, reason = os.remove( system.pathForFile( "user.txt", destDir ) )
-            result, reason = os.remove( system.pathForFile( "firebase.txt", destDir ) )
-
-            -- go to intro
-            composer.removeScene( "controller.ScheduleController" )
-            composer.removeScene( "controller.OptionsController" )   
-            composer.gotoScene("controller.IntroController")
         end
     end   
 end
