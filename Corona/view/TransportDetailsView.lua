@@ -12,7 +12,7 @@ M.showBackground = function()
     M.background.x = appData.contentW/2
     M.background.y = appData.contentH/2
     M.sceneGroup:insert( M.background )
-end 
+end
 
 M.showDetails = function(i)
 	print("============== "..i)
@@ -21,7 +21,7 @@ M.showDetails = function(i)
     M.detailsGroup = display.newGroup()
     M.sceneGroup:insert( M.detailsGroup )
 
-    -- transport.id 
+    -- transport.id
     M.transport_id  = appData.transports[i].transport_id
 
     -- role
@@ -30,9 +30,9 @@ M.showDetails = function(i)
        myModeString = "SOM PASSASJER"
     else
         myModeString = "SOM SJÅFØR"
-    end   
+    end
 
-    M.myMode = display.newText( 
+    M.myMode = display.newText(
         myModeString, 0, 0, appData.actionText, 12 )
 
     M.myMode.anchorX = 1
@@ -40,7 +40,7 @@ M.showDetails = function(i)
 
     M.myMode.anchorY = 0
     M.myMode.y = appData.margin*2
-    M.myMode.fill = appData.colors.actionText 
+    M.myMode.fill = appData.colors.actionText
     M.detailsGroup:insert( M.myMode )
 
     -- date and time
@@ -49,7 +49,7 @@ M.showDetails = function(i)
     t = tostring(t)
     if string.len(t) == 1 then
         t = "0"..t
-    end  
+    end
 
     local dateTimeString = string.sub(appData.transports[i].starting_at, 9, 10)
                         .."."
@@ -62,13 +62,13 @@ M.showDetails = function(i)
                         .. string.sub(appData.transports[i].starting_at, 15, 16)
 
     if appData.transports[i].matches[1] ~= nil and  myModeString == "SOM PASSASJER"  then
-        
+
         local t = string.sub(appData.transports[i].matches[1].pick_up_at, 12, 13)
         t = tonumber(t) + 2
         t = tostring(t)
         if string.len(t) == 1 then
             t = "0"..t
-        end  
+        end
 
         dateTimeString = string.sub(appData.transports[i].matches[1].pick_up_at, 9, 10)
                             .."."
@@ -78,16 +78,16 @@ M.showDetails = function(i)
                             .." "
                             .."kl. "
                             ..t
-                            .. string.sub(appData.transports[i].matches[1].pick_up_at, 15, 16)    
+                            .. string.sub(appData.transports[i].matches[1].pick_up_at, 15, 16)
 
     elseif appData.transports[i].matches[1] ~= nil and  myModeString == "SOM SJÅFØR"  then
-        
+
         local t = string.sub(appData.transports[i].matches[1].starting_at, 12, 13)
         t = tonumber(t) + 2
         t = tostring(t)
         if string.len(t) == 1 then
             t = "0"..t
-        end  
+        end
 
         dateTimeString = string.sub(appData.transports[i].matches[1].starting_at, 9, 10)
                             .."."
@@ -97,10 +97,10 @@ M.showDetails = function(i)
                             .." "
                             .."kl. "
                             ..t
-                            .. string.sub(appData.transports[i].matches[1].starting_at, 15, 16)    
-    end    
+                            .. string.sub(appData.transports[i].matches[1].starting_at, 15, 16)
+    end
 
-    M.dateTime = display.newText( 
+    M.dateTime = display.newText(
         dateTimeString, 0, 0, appData.actionText, 12 )
 
     M.dateTime.anchorX = 0
@@ -111,62 +111,90 @@ M.showDetails = function(i)
     M.dateTime.fill = appData.colors.actionText
     M.detailsGroup:insert( M.dateTime )
 
-    -- from
-    local fromAddressString = "fra: "
-                              ..appData.transports[i].route.from_address
+    -- new customization
+    -- from text
+    local fromString = "fra: "
 
-    M.fromAddress = display.newText( 
+    M.from = display.newText(
+        fromString, 0, 0, appData.actionText, 12 )
+
+    M.from.anchorX = 0
+    M.from.x = appData.margin*2
+
+    M.from.anchorY = 0
+    M.from.y = appData.margin*3 + 10
+    M.from.fill = appData.colors.actionComment
+    M.detailsGroup:insert( M.from )
+
+
+    -- from
+    local fromAddressString = appData.transports[i].route.from_address
+
+    M.fromAddress = display.newText(
         fromAddressString, 0, 0, appData.actionText, 12 )
 
     M.fromAddress.anchorX = 0
-    M.fromAddress.x = appData.margin*2
+    M.fromAddress.x = appData.margin*5
 
     M.fromAddress.anchorY = 0
     M.fromAddress.y = appData.margin*3 + 10
     M.fromAddress.fill = appData.colors.actionText
-    M.detailsGroup:insert( M.fromAddress )  
+    M.detailsGroup:insert( M.fromAddress )
 
-    -- from
-    local toAddressString = "til: "
-                              ..appData.transports[i].route.to_address
+    -- til text
+    local tilString = "til: "
 
-    M.toAddress = display.newText( 
+    M.til = display.newText(
+        tilString, 0, 0, appData.actionText, 12 )
+
+    M.til.anchorX = 0
+    M.til.x = appData.margin*2
+
+    M.til.anchorY = 0
+    M.til.y = appData.margin*4 + 20
+    M.til.fill = appData.colors.actionComment
+    M.detailsGroup:insert( M.til )
+
+    -- to
+    local toAddressString = appData.transports[i].route.to_address
+
+    M.toAddress = display.newText(
         toAddressString, 0, 0, appData.actionText, 12 )
 
     M.toAddress.anchorX = 0
-    M.toAddress.x = appData.margin*2
+    M.toAddress.x = appData.margin*5
 
     M.toAddress.anchorY = 0
     M.toAddress.y = appData.margin*4 + 20
-    M.toAddress.fill = appData.colors.actionText 
-    M.detailsGroup:insert( M.toAddress )   
+    M.toAddress.fill = appData.colors.actionText
+    M.detailsGroup:insert( M.toAddress )
 
     -- status
     local myStatusString
     if appData.transports[i].matches[1] == nil then
         myStatusString = ""
     else
-        myStatusString = "" 
-    end   
+        myStatusString = ""
+    end
 
-    M.myStatus = display.newText( 
+    M.myStatus = display.newText(
         myStatusString, 0, 0, appData.actionText, 12 )
 
     M.myStatus.anchorX = 1
     M.myStatus.x = appData.contentW - appData.margin*2
 
     M.myStatus.anchorY = 0
-    M.myStatus.y = appData.margin*4 + 20
-    M.myStatus.fill = appData.colors.actionText 
-    M.detailsGroup:insert( M.myStatus )  
+    M.myStatus.y = appData.margin*4 +  20
+    M.myStatus.fill = appData.colors.actionText
+    M.detailsGroup:insert( M.myStatus )
 
     -- final adjustmens
-    M.detailsGroup.y = appData.contentH 
-    				 - display.screenOriginY 
-    				 - appData.margin*2 
+    M.detailsGroup.y = appData.contentH
+    				 - display.screenOriginY
+    				 - appData.margin*2
     				 - M.footerGroup.height
     				 - M.detailsGroup.height
-    				 - 50 
+    				 - 50
 end
 
 M.showFooter = function(matched)
@@ -184,26 +212,26 @@ M.showFooter = function(matched)
             cornerRadius = 12,
             label = "SLETT",
             fontSize = 12,
-            labelColor = { default=appData.colors.confirmButtonLabelDefault, 
-                           over=appData.colors.confirmButtonLabelOver 
+            labelColor = { default=appData.colors.confirmButtonLabelDefault,
+                           over=appData.colors.confirmButtonLabelOver
                          },
-            fillColor = { default=appData.colors.confirmButtonFillDefault, 
+            fillColor = { default=appData.colors.confirmButtonFillDefault,
                           over=appData.colors.confirmButtonFillOver
                         },
-            strokeColor = { default=appData.colors.confirmButtonLabelDefault, 
-                           over=appData.colors.confirmButtonLabelOver 
+            strokeColor = { default=appData.colors.confirmButtonLabelDefault,
+                           over=appData.colors.confirmButtonLabelOver
                         },
 
-            strokeWidth = 1   
-        } 
+            strokeWidth = 1
+        }
     )
 
     M.deleteButton.anchorX = 1
     M.deleteButton.x = appData.contentW - appData.margin*2
-    M.deleteButton.alpha = 1 
-    M.footerGroup:insert( M.deleteButton ) 
+    M.deleteButton.alpha = 1
+    M.footerGroup:insert( M.deleteButton )
 
-    if matched == true then M.deleteButton.alpha = 0 end   
+    if matched == true then M.deleteButton.alpha = 0 end
 
 	-- back button
 	M.backButton = appData.widget.newButton{
@@ -214,11 +242,11 @@ M.showFooter = function(matched)
 	    -- onPress = pressFunction,
 	    -- onRelease = backFunction
 	}
-	 
+
     M.backButton.anchorX = 0;
 	M.backButton.x = appData.margin*2
     M.backButton.alpha = 0.9
-	M.footerGroup:insert( M.backButton ) 
+	M.footerGroup:insert( M.backButton )
 
 	-- final adjustments
 	M.footerGroup.x = 0
@@ -247,10 +275,10 @@ M.showMap = function(i)
     print("- - - - - - - - - "..params)
 
 	-- show map
-	M.transportMap = native.newWebView( 
-        0, 
-        0, 
-        display.contentWidth, 
+	M.transportMap = native.newWebView(
+        0,
+        0,
+        display.contentWidth,
         appData.contentH - display.screenOriginY*2 - 145
     )
 
@@ -259,7 +287,7 @@ M.showMap = function(i)
     M.transportMap.anchorY = 0
     M.transportMap.x = 0
     M.transportMap.y = display.screenOriginY
-    M.sceneGroup:insert( M.transportMap )  
+    M.sceneGroup:insert( M.transportMap )
 end
 
 return M

@@ -17,7 +17,7 @@ M.split = function(pString, pPattern)
       cap = pString:sub(last_end)
       table.insert(Table, cap)
   end
- 
+
    return Table
 end
 
@@ -41,17 +41,17 @@ M.createOptionsIcon = function(color, x, y)
 	iconGroup:insert(bar3)
 
 	iconGroup.x = x
-	iconGroup.y = y	
-end 
+	iconGroup.y = y
+end
 
 -- ------------------------------------------------------------------------- --
 -- TIME
 -- ------------------------------------------------------------------------- --
 
 M.calculateNow = function()
-	local date = os.date( "*t" ) 
+	local date = os.date( "*t" )
 	date.hour = date.hour-os.date("%z")/100
-	local now = os.time( date ) 
+	local now = os.time( date )
 	return now
 end
 
@@ -75,23 +75,24 @@ end
 
 M.localToUTC = function(y, m, d, h, s)
 
-    -- takes local year, month, day, hour and minutes as numbers or strings, 
+    -- takes local year, month, day, hour and minutes as numbers or strings,
     -- calculates UTC time and outputs in 2018-01-18T07:30:00.000Z format
 
 	local utcTime = ""
 
 	-- translate to seconds
 	local time1 = os.time {
-		year = tonumber(y), 
-		month = tonumber(m), 
-		day = tonumber(d), 
-		hour = tonumber(h), 
+		year = tonumber(y),
+		month = tonumber(m),
+		day = tonumber(d),
+		hour = tonumber(h),
 		sec = tonumber(s)
 	}
 
 	-- calculate difference between actual timezone and UTC
-	local shift = 36 * os.date("%z")
-	time1 = time1 - shift
+  local now = os.time()
+  local difference = os.difftime(now, os.time(os.date("!*t", now)))
+	time1 = time1 - difference
 
 	-- assemble result
 	local y = os.date("%Y", time1)
@@ -110,7 +111,7 @@ end
 
 M.UTCtoLocal = function(utcTime)
 	if utcTime ~= nil then
-		
+
 	    -- disassemble the UTC string 2018-02-18T15:00:00+00:00
 	    local y = string.sub(utcTime, 1, 4)
 	    local m = string.sub(utcTime, 6, 7)
@@ -119,7 +120,7 @@ M.UTCtoLocal = function(utcTime)
 	    local s = tonumber(string.sub(utcTime, 15, 16))*60
 
 	    -- change timezone
-		local shift = tonumber(os.date("%z"))/100
+		local shift = 2
 		h = h + shift
 
 		-- translate to seconds
@@ -142,8 +143,8 @@ M.minutesToHours = function(time_offset)
         local time_offset = tonumber(time_offset)
         local integralPart, fractionalPart = math.modf(time_offset/60)
         local hours = integralPart
-        local minutes = math.fmod(time_offset, 60) 
-    
+        local minutes = math.fmod(time_offset, 60)
+
         if minutes == nil then
             minutes = 0
         end
@@ -157,7 +158,7 @@ M.minutesToHours = function(time_offset)
 
         if string.len(minutes) < 2 then
             minutes = "0"..minutes
-        end    
+        end
 
         -- assemble string
         local time = tostring(hours)..":"..tostring(minutes)
@@ -178,10 +179,10 @@ M.createMap = function(lat1, lon1, lat2, lon2)
 	------------------------
 	--REQUIRED VARIABLES
 	------------------------
-	 
-	local APIkey = "AIzaSyAj5D-S7WTwtU7h8ZKYAI3T_4n1r3zxHoM" 
+
+	local APIkey = "AIzaSyAj5D-S7WTwtU7h8ZKYAI3T_4n1r3zxHoM"
 	local path = system.pathForFile( "map.html", system.DocumentsDirectory )
-	 
+
 	local lat1 = tostring(lat1)
 	local lon1 = tostring(lon1)
 	local lat2 = tostring(lat2)
@@ -190,7 +191,7 @@ M.createMap = function(lat1, lon1, lat2, lon2)
 	------------------------
 	--HTML & JAVASCRIPT CODE
 	------------------------
-	 
+
 	local mapString = [[
 		<html>
 		<head>
@@ -214,7 +215,7 @@ M.createMap = function(lat1, lon1, lat2, lon2)
 		<div id='map'></div>
 		<script>
 
-		// [1] INCLUDE LISTENER ===================================================================== 
+		// [1] INCLUDE LISTENER =====================================================================
 		function getURLParameter(name) {
             return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href)||[,""])[1].replace(/\+/g, '%20'))||null;
         }
@@ -226,7 +227,7 @@ M.createMap = function(lat1, lon1, lat2, lon2)
 		L.mapbox.accessToken = 'pk.eyJ1Ijoib2NoZWxzZXQiLCJhIjoiY2ltbmZqbXA4MDAxdXgza3E2OW44ZzZ2NyJ9.Kgl_Fc5Gu2QnpXcvL9UXRQ';
 
 		// example origin and destination
-		var start = {lat: ]]..lat1..[[, lon: ]]..lon1..[[}; 
+		var start = {lat: ]]..lat1..[[, lon: ]]..lon1..[[};
 		var finish = {lat: ]]..lat2..[[, lon: ]]..lon2..[[};
 
 		// [2] GET VARIABLES =====================================================================
@@ -246,44 +247,44 @@ M.createMap = function(lat1, lon1, lat2, lon2)
 
 		// L.mapbox.tileLayer('https://api.mapbox.com/v3/mapbox.dark.json').addTo(map);
 
-		// map.attributionControl.setPosition('bottomleft'); 
+		// map.attributionControl.setPosition('bottomleft');
 		var directions = L.mapbox.directions({
-		    profile: 'mapbox.driving' 
+		    profile: 'mapbox.driving'
 		});
 
 		// [4] DRAW DIRECTIONS ===================================================================
 		// Set the origin and destination for the direction and call the routing service
-		directions.setOrigin(L.latLng(start.lat, start.lon)); 
-		directions.setDestination(L.latLng(finish.lat, finish.lon)); 
+		directions.setOrigin(L.latLng(start.lat, start.lon));
+		directions.setDestination(L.latLng(finish.lat, finish.lon));
 		// =======================================================================================
 
-		directions.query(); 
+		directions.query();
 
         if (start.lon != 10.70) {
-			var directionsLayer = L.mapbox.directions.layer(directions).addTo(map); 
+			var directionsLayer = L.mapbox.directions.layer(directions).addTo(map);
 			var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions)
 		    	.addTo(map);
 		}
 
 		// ========================================================================================== //
 
-		// L.control.locate().addTo(map); 
+		// L.control.locate().addTo(map);
 
 		</script>
 		</body>
 		</html>]]
 
 	--This string is the text that will be written to our HTML file.
-	  
+
 	------------------------
 	--HTML FILE CREATION
 	------------------------
-	 
+
 	local htmlFile = io.open( path, "w" )
 	htmlFile:write( mapString )
 	io.close( htmlFile )
 	--The above code writes our "mapString" variable to an HTML file and saves it in the Documents directory.
-	
+
 	-- print("the map was created")
 end
 
@@ -296,10 +297,10 @@ M.createDriverMap = function(lat1, lon1, lat2, lon2)
 	------------------------
 	--REQUIRED VARIABLES
 	------------------------
-	 
-	local APIkey = "AIzaSyAj5D-S7WTwtU7h8ZKYAI3T_4n1r3zxHoM" 
+
+	local APIkey = "AIzaSyAj5D-S7WTwtU7h8ZKYAI3T_4n1r3zxHoM"
 	local path = system.pathForFile( "drivermap.html", system.DocumentsDirectory )
-	 
+
 	local lat1 = tostring(lat1)
 	local lon1 = tostring(lon1)
 	local lat2 = tostring(lat2)
@@ -308,7 +309,7 @@ M.createDriverMap = function(lat1, lon1, lat2, lon2)
 	------------------------
 	--HTML & JAVASCRIPT CODE
 	------------------------
-	 
+
 	local mapString = [[
 		<html>
 		<head>
@@ -338,24 +339,24 @@ M.createDriverMap = function(lat1, lon1, lat2, lon2)
 		L.mapbox.accessToken = 'pk.eyJ1Ijoib2NoZWxzZXQiLCJhIjoiY2ltbmZqbXA4MDAxdXgza3E2OW44ZzZ2NyJ9.Kgl_Fc5Gu2QnpXcvL9UXRQ';
 
 		// example origin and destination
-		var start = {lat: ]]..lat1..[[, lon: ]]..lon1..[[}; 
+		var start = {lat: ]]..lat1..[[, lon: ]]..lon1..[[};
 		var finish = {lat: ]]..lat2..[[, lon: ]]..lon2..[[};
 
 		var map = L.mapbox.map('map', 'mapbox.streets', {
-		    zoomControl: false }).setView([]]..lat1..[[, ]]..lon1..[[], 9); 
+		    zoomControl: false }).setView([]]..lat1..[[, ]]..lon1..[[], 9);
 
-		// map.attributionControl.setPosition('bottomleft'); 
+		// map.attributionControl.setPosition('bottomleft');
 		var directions = L.mapbox.directions({
-		    profile: 'mapbox.driving' 
+		    profile: 'mapbox.driving'
 		});
 
 		// Set the origin and destination for the direction and call the routing service
-		directions.setOrigin(L.latLng(]]..lat1..[[, ]]..lon1..[[)); 
-		directions.setDestination(L.latLng(]]..lat2..[[, ]]..lon2..[[));  
+		directions.setOrigin(L.latLng(]]..lat1..[[, ]]..lon1..[[));
+		directions.setDestination(L.latLng(]]..lat2..[[, ]]..lon2..[[));
 
-		directions.query(); 
+		directions.query();
 
-		var directionsLayer = L.mapbox.directions.layer(directions).addTo(map); 
+		var directionsLayer = L.mapbox.directions.layer(directions).addTo(map);
 		var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions)
 		    .addTo(map);
 
@@ -374,23 +375,23 @@ M.createDriverMap = function(lat1, lon1, lat2, lon2)
             }
 		}).addTo(map);
 
-		locator.start()  
+		locator.start()
 
 		</script>
 		</body>
 		</html>]]
 
 	--This string is the text that will be written to our HTML file.
-	  
+
 	------------------------
 	--HTML FILE CREATION
 	------------------------
-	 
+
 	local htmlFile = io.open( path, "w" )
 	htmlFile:write( mapString )
 	io.close( htmlFile )
 	--The above code writes our "mapString" variable to an HTML file and saves it in the Documents directory.
-	
+
 	-- print("the map was created")
 end
 
@@ -403,10 +404,10 @@ M.createDriverInfoMap = function(lat1, lon1, lat2, lon2)
 	------------------------
 	--REQUIRED VARIABLES
 	------------------------
-	 
-	local APIkey = "AIzaSyAj5D-S7WTwtU7h8ZKYAI3T_4n1r3zxHoM" 
+
+	local APIkey = "AIzaSyAj5D-S7WTwtU7h8ZKYAI3T_4n1r3zxHoM"
 	local path = system.pathForFile( "driverinfomap.html", system.DocumentsDirectory )
-	 
+
 	local lat1 = tostring(lat1)
 	local lon1 = tostring(lon1)
 	local lat2 = tostring(lat2)
@@ -415,7 +416,7 @@ M.createDriverInfoMap = function(lat1, lon1, lat2, lon2)
 	------------------------
 	--HTML & JAVASCRIPT CODE
 	------------------------
-	 
+
 	local mapString = [[
 		<html>
 		<head>
@@ -445,46 +446,46 @@ M.createDriverInfoMap = function(lat1, lon1, lat2, lon2)
 		L.mapbox.accessToken = 'pk.eyJ1Ijoib2NoZWxzZXQiLCJhIjoiY2ltbmZqbXA4MDAxdXgza3E2OW44ZzZ2NyJ9.Kgl_Fc5Gu2QnpXcvL9UXRQ';
 
 		// example origin and destination
-		var start = {lat: ]]..lat1..[[, lon: ]]..lon1..[[}; 
+		var start = {lat: ]]..lat1..[[, lon: ]]..lon1..[[};
 		var finish = {lat: ]]..lat2..[[, lon: ]]..lon2..[[};
 
 		var map = L.mapbox.map('map', 'mapbox.streets', {
-		    zoomControl: false }).setView([]]..lat1..[[, ]]..lon1..[[], 9); 
+		    zoomControl: false }).setView([]]..lat1..[[, ]]..lon1..[[], 9);
 
-		// map.attributionControl.setPosition('bottomleft'); 
+		// map.attributionControl.setPosition('bottomleft');
 		var directions = L.mapbox.directions({
-		    profile: 'mapbox.driving' 
+		    profile: 'mapbox.driving'
 		});
 
 		// Set the origin and destination for the direction and call the routing service
-		directions.setOrigin(L.latLng(]]..lat1..[[, ]]..lon1..[[)); 
-		directions.setDestination(L.latLng(]]..lat2..[[, ]]..lon2..[[));  
+		directions.setOrigin(L.latLng(]]..lat1..[[, ]]..lon1..[[));
+		directions.setDestination(L.latLng(]]..lat2..[[, ]]..lon2..[[));
 
-		directions.query(); 
+		directions.query();
 
-		var directionsLayer = L.mapbox.directions.layer(directions).addTo(map); 
+		var directionsLayer = L.mapbox.directions.layer(directions).addTo(map);
 		var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions)
 		    .addTo(map);
 
 		// ========================================================================================== //
 
-		L.control.locate().addTo(map);  
+		L.control.locate().addTo(map);
 
 		</script>
 		</body>
 		</html>]]
 
 	--This string is the text that will be written to our HTML file.
-	  
+
 	------------------------
 	--HTML FILE CREATION
 	------------------------
-	 
+
 	local htmlFile = io.open( path, "w" )
 	htmlFile:write( mapString )
 	io.close( htmlFile )
 	--The above code writes our "mapString" variable to an HTML file and saves it in the Documents directory.
-	
+
 	-- print("the map was created")
 end
 
@@ -496,10 +497,10 @@ M.createPassengerMap = function(lat1, lon1, lat2, lon2, transport_id, accessToke
 	------------------------
 	--REQUIRED VARIABLES
 	------------------------
-	 
-	local APIkey = "AIzaSyAj5D-S7WTwtU7h8ZKYAI3T_4n1r3zxHoM" 
+
+	local APIkey = "AIzaSyAj5D-S7WTwtU7h8ZKYAI3T_4n1r3zxHoM"
 	local path = system.pathForFile( "passengermap.html", system.DocumentsDirectory )
-	 
+
 	local lat1 = tostring(lat1)
 	local lon1 = tostring(lon1)
 	local lat2 = tostring(lat2)
@@ -508,7 +509,7 @@ M.createPassengerMap = function(lat1, lon1, lat2, lon2, transport_id, accessToke
 	------------------------
 	--HTML & JAVASCRIPT CODE
 	------------------------
-	 
+
 	local mapString = [[
     <html>
 		<head>
@@ -533,23 +534,23 @@ M.createPassengerMap = function(lat1, lon1, lat2, lon2, transport_id, accessToke
 		L.mapbox.accessToken = 'pk.eyJ1Ijoib2NoZWxzZXQiLCJhIjoiY2ltbmZqbXA4MDAxdXgza3E2OW44ZzZ2NyJ9.Kgl_Fc5Gu2QnpXcvL9UXRQ';
 
 		// example origin and destination
-		var start = {lat: ]]..lat1..[[, lon: ]]..lon1..[[}; 
+		var start = {lat: ]]..lat1..[[, lon: ]]..lon1..[[};
 		var finish = {lat: ]]..lat2..[[, lon: ]]..lon2..[[};
 		var driver = {lat: start.lat, lon: start.lon};
-		
+
 		var url = "https://api.sammevei.no/api/1/users/current/transports/]]..
 		transport_id..
 		[[/position"
         var authorization = "]]..accessToken..[["
 	// ================================================================================================
-	
+
 		var map = L.mapbox.map('map', 'mapbox.streets', {
-		     zoomControl: false }).setView([finish.lat, finish.lon], 9); 
-		     
+		     zoomControl: false }).setView([finish.lat, finish.lon], 9);
+
     var myLayer;
     var timerVar = setInterval(myTimer, 10000);
     var i = 0;
-    
+
     var settings = {
       "async": true,
       "crossDomain": true,
@@ -563,24 +564,24 @@ M.createPassengerMap = function(lat1, lon1, lat2, lon2, transport_id, accessToke
 	// ================================================================================================
 
          // DIRECTIONS ===================================================================== //
-		 map.attributionControl.setPosition('bottomleft'); 
+		 map.attributionControl.setPosition('bottomleft');
 		 var directions = L.mapbox.directions({
-	        profile: 'mapbox.driving' 
+	        profile: 'mapbox.driving'
 		    });
-		    
-		
+
+
 		// Set the origin and destination for the direction and call the routing service
 		directions.setOrigin(L.latLng(start.lat, start.lon)); // driver
-		directions.setDestination(L.latLng(finish.lat, finish.lon)); // passenger 
-        
-		// directions.query(); 
+		directions.setDestination(L.latLng(finish.lat, finish.lon)); // passenger
 
-		// var directionsLayer = L.mapbox.directions.layer(directions).addTo(map); 
+		// directions.query();
+
+		// var directionsLayer = L.mapbox.directions.layer(directions).addTo(map);
 		// var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions)
 		//    .addTo(map);
-		    
+
 	    // MOVE A CAR ON THE MAP =========================================================== //
-	    
+
 	   function myTimer() {
         // get driver's position from server
         $.ajax(settings).done(function (response) {
@@ -589,35 +590,35 @@ M.createPassengerMap = function(lat1, lon1, lat2, lon2, transport_id, accessToke
           driver.lon = response.position.coordinates[0];
           driver.lat = response.position.coordinates[1];
         });
-        
+
         console.log("great");
-    
+
         var geojson = [
           {
             type: 'Feature',
-            
+
             geometry: {
                 type: 'Point',
                 coordinates: [driver.lon, driver.lat] // lon, lat
             },
-            
+
             properties: {
               'marker-color': '#00cc00',
               'marker-size': 'large',
               'marker-symbol': 'car'
             }
-            
+
           }
-        ];	
+        ];
 
         if (i > 0) {
             map.removeLayer(myLayer )
         }
-        
+
         myLayer = L.mapbox.featureLayer().setGeoJSON(geojson).addTo(map);
         i++
     }
-		    
+
 		// ========================================================================================== //
 
 		</script>
@@ -625,11 +626,11 @@ M.createPassengerMap = function(lat1, lon1, lat2, lon2, transport_id, accessToke
 		</html>]]
 
 	--This string is the text that will be written to the HTML file.
-	 
+
 	------------------------
 	--HTML FILE CREATION
 	------------------------
-	 
+
 	local htmlFile = io.open( path, "w" )
 	htmlFile:write( mapString )
 	io.close( htmlFile )

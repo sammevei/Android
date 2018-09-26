@@ -25,7 +25,7 @@ local t1
 local firebaseRegistered = function(event)
     if appData.useNotifications == true then
         print(event.response)
-        print("=============== CLIENT REGISTERED ====================")     
+        print("=============== CLIENT REGISTERED ====================")
     end
 end
 
@@ -41,64 +41,64 @@ local goFurther = function()
     -- if it's getting too long, try request again
     if iterations == 10 or iterations == 20 then
         refreshToken()
-    end    
+    end
 
     -- if we are waiting too long, check what's available and ask for missing data
     if iterations > 30 then
 
         if appData.session.accessToken == "" then
-            timer.cancel( t1 ) 
-            showAlert() 
-            return true     
+            timer.cancel( t1 )
+            showAlert()
+            return true
         elseif appData.user.phoneNumber == ""
-        or appData.user.phoneNumber == nil    
-        then  
-            appData.composer.removeScene( "controller.IntroController" ) 
-            appData.composer.gotoScene( "controller.PhoneController" ) 
-            timer.cancel( t1 ) 
-            return true       
-        elseif (appData.addresses.work.location == ""
-        or appData.addresses.home.location == "" )   
+        or appData.user.phoneNumber == nil
         then
-            appData.composer.removeScene( "controller.IntroController" )  
+            appData.composer.removeScene( "controller.IntroController" )
+            appData.composer.gotoScene( "controller.PhoneController" )
+            timer.cancel( t1 )
+            return true
+        elseif (appData.addresses.work.location == ""
+        or appData.addresses.home.location == "" )
+        then
+            appData.composer.removeScene( "controller.IntroController" )
             appData.composer.gotoScene( "controller.PlacesController" )
             timer.cancel( t1 )
-            return true 
+            return true
         elseif (appData.addresses.work.location == ""
-        or appData.addresses.home.location == "" )   
+        or appData.addresses.home.location == "" )
         then
-            appData.composer.removeScene( "controller.IntroController" )  
+            appData.composer.removeScene( "controller.IntroController" )
             appData.composer.gotoScene( "controller.DatesController" )
             timer.cancel( t1 )
             return true
-        elseif (appData.user.mode == "" or appData.user.mode == nil) 
+        elseif (appData.user.mode == "" or appData.user.mode == nil)
         then
-            appData.composer.removeScene( "controller.IntroController" )  
+            appData.composer.removeScene( "controller.IntroController" )
             appData.composer.gotoScene( "controller.DateController" )
             timer.cancel( t1 )
-            return true  
+            return true
         elseif appData.schedule[1] == nil then
-            appData.composer.removeScene( "controller.IntroController" )  
+            appData.composer.removeScene( "controller.IntroController" )
             appData.composer.gotoScene( "controller.PlacesController" )
             timer.cancel( t1 )
-            return true                                    
+            return true
         elseif appData.schedule[1].time_offset == "" then
-            appData.composer.removeScene( "controller.IntroController" )  
+            appData.composer.removeScene( "controller.IntroController" )
             appData.composer.gotoScene( "controller.PlacesController" )
             timer.cancel( t1 )
-            return true 
+            return true
         elseif appData.schedule[1].time_offset == nil then
-            appData.composer.removeScene( "controller.IntroController" )  
+            appData.composer.removeScene( "controller.IntroController" )
             appData.composer.gotoScene( "controller.PlacesController" )
             timer.cancel( t1 )
-            return true                 
-        else 
-            timer.cancel( t1 ) 
+            return true
+        else
+            timer.cancel( t1 )
             showAlert()
-            return true 
+            return true
         end
 
-    end    
+    end
 
     -- if everything ok, go to schedule ---------------------------------------------
 
@@ -110,34 +110,34 @@ local goFurther = function()
         iterations = iterations + 1
         print("ITERATION 2: "..iterations)
         return true
-    elseif appData.schedule[1].time_offset == "" then 
+    elseif appData.schedule[1].time_offset == "" then
         iterations = iterations + 1
         print("ITERATION 3: "..iterations)
-        return true           
-    end 
+        return true
+    end
 
     if  appData.addresses.work.location ~= ""
-        and appData.addresses.home.location ~= ""    
+        and appData.addresses.home.location ~= ""
         and appData.schedule[1].time_offset ~= nil
 
     or  appData.addresses.work.location ~= ""
-        and appData.addresses.home.location ~= ""    
+        and appData.addresses.home.location ~= ""
         and appData.schedule[1].time_offset ~= nil
-    then  
+    then
 
-        -- cancel timer 
+        -- cancel timer
         timer.cancel( t1 )
 
         --Prepare Data
-        local url = "https://api.sammevei.no/api/1/clients/current/token" 
+        local url = "https://api.sammevei.no/api/1/clients/current/token"
 
         local headers = {}
         headers["Content-Type"] = "application/x-www-form-urlencoded"
         headers["Authorization"] = "Bearer "..appData.session.accessToken
-          
+
         local params = {}
         params.headers = headers
-        params.body =     
+        params.body =
             'type='..utils.urlEncode(appData.system.phoneType)..'&'..
             'version='..appData.system.appVersion..'&'..
             'build='..utils.urlEncode(appData.system.appBuild)..'&'..
@@ -147,13 +147,13 @@ local goFurther = function()
             'os_name='..utils.urlEncode(appData.system.osName)..'&'..
             'os_version='..utils.urlEncode(appData.system.osVersion)
 
-        if (appData.useNotifications == true ) then 
+        if (appData.useNotifications == true ) then
 
-            appData.firebaseToken = appData.notifications.getDeviceToken()
-
-            params.body = params.body..'&token='..appData.firebaseToken
-            print(params.body)    
-            network.request( url, "POST", firebaseRegistered, params)  
+            -- appData.firebaseToken = appData.notifications.getDeviceToken()
+            --
+            -- params.body = params.body..'&token='..appData.firebaseToken
+            -- print(params.body)
+            -- network.request( url, "POST", firebaseRegistered, params)
         end
 
         -- go to schedule
@@ -162,14 +162,15 @@ local goFurther = function()
             time = 1200
         }
 
-        appData.composer.removeScene( "controller.IntroController" ) 
-        appData.composer.gotoScene( "controller.ScheduleController", options ) 
-        -- appData.composer.gotoScene( "controller.GreetingController", options ) 
+        appData.composer.removeScene( "controller.IntroController" )
+        -- for showing new screen
+        appData.composer.gotoScene( "controller.PurposalController", options )
+        -- appData.composer.gotoScene( "controller.GreetingController", options )
     else
         iterations = iterations + 1
         print("ITERATION: "..iterations)
         return true
-    end    
+    end
 end
 
 -- ------------------------------------------------------------------------------------------ --
@@ -179,7 +180,7 @@ end
 -- finish setting addreses
 local addressesSet = function(event)
     print("--------------- ADDRESSES SET ---------------")
-    print(event.response)    
+    print(event.response)
 end
 
 -- set addresses
@@ -187,18 +188,18 @@ local setAddresses = function()
 
     if tonumber(appData.addresses.home.address_id) > 2
     and tonumber(appData.addresses.work.address_id) > 2
-    then  
+    then
 
         --prepare data
-        local url = "https://api.sammevei.no/api/1/users/current/addresses" 
+        local url = "https://api.sammevei.no/api/1/users/current/addresses"
 
         local headers = {}
         headers["Content-Type"] = "application/x-www-form-urlencoded"
         headers["Authorization"] = "Bearer "..appData.session.accessToken
-          
+
         local params = {}
         params.headers = headers
-        params.body = 
+        params.body =
             'a='..
             utils.urlEncode(tostring(appData.addresses.home.address_id))..
             '&'..
@@ -208,8 +209,8 @@ local setAddresses = function()
         -- send request
         print(params.body)
         network.request( url, "POST", addressesSet, params)
-    end      
-end 
+    end
+end
 
 -- ------------------------------------------------------------------------------------------ --
 -- SCHEDULE
@@ -224,19 +225,19 @@ local saveSchedule = function(event)
     local temporarySchedule = appData.json.decode( event.response )
     appData.schedule = appData.json.decode( event.response )
 
-    if temporarySchedule[1] == nil then 
+    if temporarySchedule[1] == nil then
         print(" =================== SCHEDULE EMPTY =====================")
         appData.ready.schedule = true
         return true
     else
         appData.schedule = temporarySchedule
-    end 
+    end
 
     -- sort
     appData.schedule = model.sortSchedule(appData.schedule)
 
     -- save
-    model.saveSchedule(appData.schedule) 
+    model.saveSchedule(appData.schedule)
 
     -- download transports
     downloadTransports()
@@ -251,12 +252,12 @@ local getSchedule = function()
     local headers = {}
     headers["Content-Type"] = "application/x-www-form-urlencoded"
     headers["Authorization"] = "Bearer "..appData.session.accessToken
-      
+
     local params = {}
     params.headers = headers
 
     -- send request
-    network.request( url, "GET", saveSchedule, params)    
+    network.request( url, "GET", saveSchedule, params)
 end
 
 -- finish schedule upload
@@ -266,24 +267,24 @@ local scheduleUploaded = function( event )
     getSchedule()
 end
 
--- upload schedule 
+-- upload schedule
 local uploadSchedule = function()
 
     print("uploading schedule in intro")
 
     --prepare data
-    local url = "https://api.sammevei.no/api/1/users/current/schedules" 
+    local url = "https://api.sammevei.no/api/1/users/current/schedules"
 
     local headers = {}
     headers["Content-Type"] = "application/x-www-form-urlencoded"
     headers["Authorization"] = "Bearer "..appData.session.accessToken
-      
+
     local params = {}
     params.headers = headers
 
     -- MONDAY ------------------------------------------------
 
-    local monday = 
+    local monday =
     -- morning
     utils.urlEncode('mon[0][from_address_id]')..
     '='..
@@ -315,7 +316,7 @@ local uploadSchedule = function()
     utils.urlEncode(tostring(appData.schedule[1].time_flex/60))..
     '&'..
 
-    -- afternoon 
+    -- afternoon
     utils.urlEncode('mon[1][from_address_id]')..
     '='..
     utils.urlEncode(appData.schedule[2].from_address_id)..
@@ -347,7 +348,7 @@ local uploadSchedule = function()
     '&'
 
     -- TUESDAY ------------------------------------------------
-    local tuesday = 
+    local tuesday =
     -- morning
     utils.urlEncode('tue[0][from_address_id]')..
     '='..
@@ -379,7 +380,7 @@ local uploadSchedule = function()
     utils.urlEncode(tostring(appData.schedule[3].time_flex/60))..
     '&'..
 
-    -- afternoon 
+    -- afternoon
     utils.urlEncode('tue[1][from_address_id]')..
     '='..
     utils.urlEncode(appData.schedule[4].from_address_id)..
@@ -408,7 +409,7 @@ local uploadSchedule = function()
     utils.urlEncode('tue[1][time_flex]')..
     '='..
     utils.urlEncode(tostring(appData.schedule[4].time_flex/60))..
-    '&'  
+    '&'
 
 
     -- WEDNESDAY ------------------------------------------------
@@ -444,7 +445,7 @@ local uploadSchedule = function()
     utils.urlEncode(tostring(appData.schedule[5].time_flex/60))..
     '&'..
 
-    -- afternoon 
+    -- afternoon
     utils.urlEncode('wed[1][from_address_id]')..
     '='..
     utils.urlEncode(appData.schedule[6].from_address_id)..
@@ -473,11 +474,11 @@ local uploadSchedule = function()
     utils.urlEncode('wed[1][time_flex]')..
     '='..
     utils.urlEncode(tostring(appData.schedule[6].time_flex/60))..
-    '&'  
+    '&'
 
 
     -- THURSDAY ------------------------------------------------
-    local thursday = 
+    local thursday =
     -- morning
     utils.urlEncode('thu[0][from_address_id]')..
     '='..
@@ -503,13 +504,13 @@ local uploadSchedule = function()
     '='..
     utils.urlEncode(tostring(appData.schedule[7].is_enabled))..
     '&'..
-    
+
     utils.urlEncode('thu[0][time_flex]')..
     '='..
     utils.urlEncode(tostring(appData.schedule[7].time_flex/60))..
     '&'..
 
-    -- afternoon 
+    -- afternoon
     utils.urlEncode('thu[1][from_address_id]')..
     '='..
     utils.urlEncode(appData.schedule[8].from_address_id)..
@@ -538,10 +539,10 @@ local uploadSchedule = function()
     utils.urlEncode('thu[1][time_flex]')..
     '='..
     utils.urlEncode(tostring(appData.schedule[8].time_flex/60))..
-    '&'    
+    '&'
 
     -- FRIDAY ------------------------------------------------
-    local friday = 
+    local friday =
     -- morning
     utils.urlEncode('fri[0][from_address_id]')..
     '='..
@@ -573,7 +574,7 @@ local uploadSchedule = function()
     utils.urlEncode(tostring(appData.schedule[9].time_flex/60))..
     '&'..
 
-    -- afternoon 
+    -- afternoon
     utils.urlEncode('fri[1][from_address_id]')..
     '='..
     utils.urlEncode(appData.schedule[10].from_address_id)..
@@ -602,11 +603,11 @@ local uploadSchedule = function()
     utils.urlEncode('fri[1][time_flex]')..
     '='..
     utils.urlEncode(tostring(appData.schedule[10].time_flex/60))..
-    '&' 
+    '&'
 
 
     -- SATURDAY ------------------------------------------------
-    local saturday = 
+    local saturday =
     -- morning
     utils.urlEncode('sat[0][from_address_id]')..
     '='..
@@ -638,7 +639,7 @@ local uploadSchedule = function()
     utils.urlEncode(tostring(appData.schedule[11].time_flex/60))..
     '&'..
 
-    -- afternoon 
+    -- afternoon
     utils.urlEncode('sat[1][from_address_id]')..
     '='..
     utils.urlEncode(appData.schedule[12].from_address_id)..
@@ -700,9 +701,9 @@ local uploadSchedule = function()
     utils.urlEncode('sun[0][time_flex]')..
     '='..
     utils.urlEncode(tostring(appData.schedule[13].time_flex/60))..
-    '&'..    
+    '&'..
 
-    -- afternoon 
+    -- afternoon
     utils.urlEncode('sun[1][from_address_id]')..
     '='..
     utils.urlEncode(appData.schedule[14].from_address_id)..
@@ -731,7 +732,7 @@ local uploadSchedule = function()
     utils.urlEncode('sun[1][time_flex]')..
     '='..
     utils.urlEncode(tostring(appData.schedule[14].time_flex/60))
-    
+
     params.body = monday..
                 tuesday..
                 wednesday..
@@ -744,7 +745,7 @@ local uploadSchedule = function()
    -- print(monday)
 
     -- send request
-    network.request( url, "POST", scheduleUploaded, params)   
+    network.request( url, "POST", scheduleUploaded, params)
 end
 
 -- ------------------------------------------------------------------------------------------ --
@@ -758,18 +759,18 @@ networkError = function(event)
         elseif ( i == 2 ) then
              -- Do nothing; dialog will simply dismiss
         end
-    end    
-end 
+    end
+end
 
 showAlert = function()
-        
-    local alert = native.showAlert( 
+
+    local alert = native.showAlert(
         "",
-        "Ooops... det synes å være et problem med forbindelsen din. ".. 
-        "Vi kunne ikke koble deg til våre servere. ".. 
+        "Ooops... det synes å være et problem med forbindelsen din. "..
+        "Vi kunne ikke koble deg til våre servere. "..
         "Vennligst sjekk innstillinger din.",
         { "OK", "" },
-        networkError 
+        networkError
         )
 end
 
@@ -794,13 +795,13 @@ local saveSchedule = function(event)
     local temporarySchedule = appData.json.decode( event.response )
     appData.schedule = appData.json.decode( event.response )
 
-    if temporarySchedule[1] == nil then 
+    if temporarySchedule[1] == nil then
         print(" =================== SCHEDULE EMPTY =====================")
         appData.ready.schedule = true
         return true
     else
         appData.schedule = temporarySchedule
-    end    
+    end
 
     -- sort
     appData.schedule = model.sortSchedule(appData.schedule)
@@ -820,7 +821,7 @@ local saveSchedule = function(event)
     if #morningMinutes < 2 then morningMinutes = morningMinutes.."0" end
     morningTime = tostring(morningHours)..":"..morningMinutes
 
-    
+
     local afternoonTime = tonumber(appData.schedule[2].time_offset)
     local afternoonHours, afternoonMinutes = math.modf( afternoonTime/60 )
     afternoonHours = tostring(afternoonHours)
@@ -830,7 +831,7 @@ local saveSchedule = function(event)
     afternoonTime = tostring(afternoonHours)..":"..afternoonMinutes
 
     appData.user.morningTime = morningTime
-    appData.user.afternoonTime = afternoonTime 
+    appData.user.afternoonTime = afternoonTime
 
     print("----------------------- SCHEDULE SET")
     print(appData.user.morningTime)
@@ -846,15 +847,15 @@ local saveCar = function(event)
 
     local data = appData.json.decode(event.response)
     print(event.response)
- 
-    
+
+
     print("[1]")
     if data[1] ~= nil then
         appData.car.license_plate = data[1].license_plate
         appData.car.make = data[1].make
         appData.car.model = data[1].model
         appData.car.year = data[1].year
-        appData.car.color = data[1].color 
+        appData.car.color = data[1].color
         appData.car.seats = data[1].seats
         appData.car.vehicle_type_id = data[1].vehicle_type_id
         appData.car.vehicle_engine_type_id = data[1].engine
@@ -889,8 +890,8 @@ local saveAddresses = function(event)
                 appData.addresses.home.postcode = data[i].postcode
                 appData.addresses.home.region = data[i].region
                 appData.addresses.home.country = data[i].country
-            end 
-        end       
+            end
+        end
 
         -- update work address
         for i=1, #data, 1 do
@@ -907,8 +908,8 @@ local saveAddresses = function(event)
                 appData.addresses.work.postcode = data[i].postcode
                 appData.addresses.work.region = data[i].region
                 appData.addresses.work.country = data[i].country
-            end 
-        end  
+            end
+        end
 
 
 
@@ -939,10 +940,10 @@ local updateUser = function(event)
     if data.settings.predominant == 1 then
         appData.user.mode = "passenger"
         appData.mode = "passenger"
-    elseif data.settings.predominant == 2 then 
+    elseif data.settings.predominant == 2 then
         appData.user.mode = "driver"
         appData.mode = "driver"
-    end         
+    end
 
     print("----------------------- USER SET")
 
@@ -963,12 +964,12 @@ local downloadData = function()
         -- headers
         local headers = {}
         headers["Content-Type"] = "application/x-www-form-urlencoded"
-        headers["Authorization"] = "Bearer "..appData.session.accessToken      
+        headers["Authorization"] = "Bearer "..appData.session.accessToken
         params.headers = headers
 
-       
+
         -- send request
-        network.request( url, "GET", updateUser, params) 
+        network.request( url, "GET", updateUser, params)
         print("downloading user!")
 
         -- ADDRESSES ---------------------------------------------------------------
@@ -980,13 +981,13 @@ local downloadData = function()
         -- headers
         local headers = {}
         headers["Content-Type"] = "application/x-www-form-urlencoded"
-        headers["Authorization"] = "Bearer "..appData.session.accessToken      
+        headers["Authorization"] = "Bearer "..appData.session.accessToken
         params.headers = headers
 
-       
+
         -- send request
         network.request( url, "GET", saveAddresses, params)
-        print("downloading addresses!") 
+        print("downloading addresses!")
 
         -- CAR ---------------------------------------------------------------------
 
@@ -998,13 +999,13 @@ local downloadData = function()
         -- headers
         local headers = {}
         headers["Content-Type"] = "application/x-www-form-urlencoded"
-        headers["Authorization"] = "Bearer "..appData.session.accessToken      
+        headers["Authorization"] = "Bearer "..appData.session.accessToken
         params.headers = headers
 
-       
+
         -- send request
         network.request( url, "GET", saveCar, params)
-        print("downloading car!") 
+        print("downloading car!")
 
         -- SCHEDULE ----------------------------------------------------------------
 
@@ -1014,26 +1015,26 @@ local downloadData = function()
         local headers = {}
         headers["Content-Type"] = "application/x-www-form-urlencoded"
         headers["Authorization"] = "Bearer "..appData.session.accessToken
-          
+
         local params = {}
         params.headers = headers
 
         -- send request
-        network.request( url, "GET", saveSchedule, params)  
-        print("downloading schedule!")  
+        network.request( url, "GET", saveSchedule, params)
+        print("downloading schedule!")
 
         -- TRANSPORTS --------------------------------------------------------------
         --prepare data
-        local url = "https://api.sammevei.no/api/1/users/current/transports" 
+        local url = "https://api.sammevei.no/api/1/users/current/transports"
 
         local headers = {}
         headers["Authorization"] = "Bearer "..appData.session.accessToken
-          
+
         local params = {}
         params.headers = headers
 
         -- send request
-        network.request( url, "GET", saveTransports, params) 
+        network.request( url, "GET", saveTransports, params)
         print("downloading transports!")
     end
 end
@@ -1049,40 +1050,40 @@ local finishAuth = function( event )
     -- print(event.response)
 
     if event.response == nil then
-        local alert = native.showAlert( 
+        local alert = native.showAlert(
             "",
-            "There seems to be some connection problem. Enable Internet in your phone settings and restart the app, please!", 
+            "There seems to be some connection problem. Enable Internet in your phone settings and restart the app, please!",
             { "OK", "" },
-            networkError 
+            networkError
             )
 
         print("- - - - - - - going to register 2")
         appData.composer.removeScene( "controller.IntroController" )
-        appData.composer.gotoScene( "controller.WelcomeController" )    
-    else    
+        appData.composer.gotoScene( "controller.WelcomeController" )
+    else
         local data = appData.json.decode(event.response)
-        
+
         if data == nil then
-            local alert = native.showAlert( 
+            local alert = native.showAlert(
                 "",
-                "There seems to be some connection problem. Enable Internet in your phone settings and restart the app, please!", 
+                "There seems to be some connection problem. Enable Internet in your phone settings and restart the app, please!",
                 { "OK", "" },
                 networkError
                 )
-            
+
             print("- - - - - - - going to register 3")
             appData.composer.removeScene( "controller.IntroController" )
-            appData.composer.gotoScene( "controller.WelcomeController" )     
-        else    
+            appData.composer.gotoScene( "controller.WelcomeController" )
+        else
             -- store tokens
             appData.session.accessToken = data.token.accessToken
             appData.session.refreshToken = data.token.refreshToken
-            
-            -- set commuting addresses every time the user starts the app just to be sure 
+
+            -- set commuting addresses every time the user starts the app just to be sure
             -- setAddresses()
 
             -- download all the data from server
-            downloadData() 
+            downloadData()
         end
     end
 end
@@ -1090,14 +1091,14 @@ end
 -- Auto Login User
 local autoLoginUser = function()
   --prepare data
-    local url = "https://api.sammevei.no/api/1/auth/login" 
+    local url = "https://api.sammevei.no/api/1/auth/login"
 
     local headers = {}
     headers["Content-Type"] = "application/x-www-form-urlencoded"
-      
+
     local params = {}
     params.headers = headers
-    params.body = 
+    params.body =
         'username='..
         utils.urlEncode(appData.user.userName)..
         '&'..
@@ -1128,15 +1129,15 @@ tokenRefreshed = function(event)
 
             -- download all the data from server
             downloadData()
-        end 
-    end   
+        end
+    end
 end
 
 refreshToken = function()
     print("refreshing token")
 
         -- prepare data
-        local url = "https://api.sammevei.no/api/1/auth/token" 
+        local url = "https://api.sammevei.no/api/1/auth/token"
 
 
         local params = {}
@@ -1144,7 +1145,7 @@ refreshToken = function()
         -- HEADERS
         local headers = {}
         headers["Content-Type"] = "application/x-www-form-urlencoded"
-        headers["Authorization"] = "Bearer "..appData.session.accessToken      
+        headers["Authorization"] = "Bearer "..appData.session.accessToken
         params.headers = headers
 
         -- BODY
@@ -1152,8 +1153,8 @@ refreshToken = function()
         print(params.body)
 
         -- send request
-        network.request( url, "POST", tokenRefreshed, params)  
-end 
+        network.request( url, "POST", tokenRefreshed, params)
+end
 -- -----------------------------------------------------------------------------------
 -- Scene components
 -- -----------------------------------------------------------------------------------
@@ -1161,7 +1162,7 @@ local scene = composer.newScene()
 
 -- create()
 function scene:create( event )
- 
+
     appData.sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
@@ -1178,7 +1179,7 @@ function scene:create( event )
     -- check whether refresh token is stored
     if (tokenFound == false) then
         tokenFound = model.openRefreshToken()
-    end  
+    end
 
     -- check whether user data is stored
     if (userFound == false) then
@@ -1187,76 +1188,76 @@ function scene:create( event )
 
     -- if not data is stored, let user to register/login
     if (tokenFound ~= false) then
-        refreshToken()       
-        t1 = timer.performWithDelay( 1000, goFurther, -1 )     
+        refreshToken()
+        t1 = timer.performWithDelay( 1000, goFurther, -1 )
     elseif (userFound ~= false) then
         autoLoginUser()
-        t1 = timer.performWithDelay( 1000, goFurther, -1 ) 
+        t1 = timer.performWithDelay( 1000, goFurther, -1 )
     else
-        print("- - - - - - - - - - going to register 1") 
+        print("- - - - - - - - - - going to register 1")
         composer.removeScene("controller.IntroController")
-        appData.composer.gotoScene( "controller.WelcomeController" )           
+        appData.composer.gotoScene( "controller.WelcomeController" )
     end
 end
- 
- 
+
+
 -- show()
 function scene:show( event )
- 
+
     local sceneGroup = self.view
     local phase = event.phase
- 
+
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
 
     local destDir = system.DocumentsDirectory  -- Location where the file is stored
     local result, reason
-    
+
     result, reason = os.remove( system.pathForFile( "map.html", destDir ) )
     result, reason = os.remove( system.pathForFile( "drivermap.html", destDir ) )
     result, reason = os.remove( system.pathForFile( "driverinfomap.html", destDir ) )
     result, reason = os.remove( system.pathForFile( "passengermap.html", destDir ) )
-  
+
     if result then
        -- print( "File removed" )
     else
        -- print( "File does not exist", reason )  --> File does not exist    apple.txt: No such file or directory
-    end 
+    end
 
     appData.firebaseToken = model.openFirebaseToken()
-    print("FB Token Found ==========") 
-    print(appData.firebaseToken) 
- 
+    print("FB Token Found ==========")
+    print(appData.firebaseToken)
+
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
 
- 
+
     end
 end
- 
- 
+
+
 -- hide()
 function scene:hide( event )
- 
+
     local sceneGroup = self.view
     local phase = event.phase
- 
+
     if ( phase == "will" ) then
         -- Code here runs when the scene is on screen (but is about to go off screen)
- 
+
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
- 
+
     end
 end
- 
- 
+
+
 -- destroy()
 function scene:destroy( event )
- 
+
     local sceneGroup = self.view
     -- Code here runs prior to the removal of scene's view
- 
+
 end
 
 
@@ -1268,5 +1269,5 @@ scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
 -- -----------------------------------------------------------------------------------
- 
+
 return scene

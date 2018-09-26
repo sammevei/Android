@@ -15,7 +15,7 @@ M.createSchedule = function()
     print("-- ---------------------------------------------------- --")
 
 	-- Schedule: Array for 7 days, morning + afternoon
-	appData.schedule = 
+	appData.schedule =
 	{
 		{
 			day = "mon",
@@ -26,11 +26,11 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
 		},
-			
+
 		{
 			day = "mon",
 			id = "",
@@ -40,8 +40,8 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
 		},
 
@@ -54,11 +54,11 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
 		},
-			
+
 		{
 			day = "tue",
 			id = "",
@@ -68,10 +68,10 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
-		},	
+		},
 
 		{
 			day = "wed",
@@ -82,11 +82,11 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
 		},
-			
+
 		{
 			day = "wed",
 			id = "",
@@ -96,10 +96,10 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
-		},	
+		},
 
 		{
 			day = "thu",
@@ -110,11 +110,11 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
 		},
-			
+
 		{
 			day = "thu",
 			id = "",
@@ -124,8 +124,8 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
 		},
 
@@ -138,11 +138,11 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
 		},
-			
+
 		{
 			day = "fri",
 			id = "",
@@ -152,8 +152,8 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
 		},
 
@@ -166,11 +166,11 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
 		},
-			
+
 		{
 			day = "sat",
 			id = "",
@@ -180,25 +180,11 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
-			updated_at=""
-		},	
-
-		{
-			day = "sun",
-			id = "",
-			user_id = "",
-			from_address_id = "",
-			to_address_id = "",
-			time_offset = "",
-			time_flex = "15",
-			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
 		},
-			
+
 		{
 			day = "sun",
 			id = "",
@@ -208,13 +194,27 @@ M.createSchedule = function()
 			time_offset = "",
 			time_flex = "15",
 			mode = "1",
-			is_enabled = false,	
-			created_at="",    
+			is_enabled = false,
+			created_at="",
 			updated_at=""
-		}			
-	}  
+		},
 
-	print(#appData.schedule)  
+		{
+			day = "sun",
+			id = "",
+			user_id = "",
+			from_address_id = "",
+			to_address_id = "",
+			time_offset = "",
+			time_flex = "15",
+			mode = "1",
+			is_enabled = false,
+			created_at="",
+			updated_at=""
+		}
+	}
+
+	print(#appData.schedule)
 
 	for i=1, #appData.schedule, 2 do
 
@@ -233,7 +233,7 @@ M.createSchedule = function()
 	    	appData.schedule[i].mode = "2"
 	    elseif appData.user.mode == "both" then
 			appData.schedule[i].mode = "3"
-		end	  
+		end
 
 		appData.schedule[i].is_enabled = false
 
@@ -252,10 +252,10 @@ M.createSchedule = function()
 	    	appData.schedule[i+1].mode = "2"
 	    elseif appData.user.mode == "driver" then
 			appData.schedule[i+1].mode = "3"
-		end	  
-		  			
+		end
+
 		appData.schedule[i+1].is_enabled = false
-	end	
+	end
 end
 
 -- Sort Schedule
@@ -269,12 +269,12 @@ M.sortSchedule = function(schedule)
 
    	-- create temp schedule aray
    	tempSchedule = {{}, {}, {}, {}, {}, {}, {}}
-   
+
    	-- fill in the temp schedule
    	for i=1, #schedule do
  		if (schedule[i].day) == "mon" then
         	table.insert( tempSchedule[1], schedule[i] )
-        end	
+        end
 	end
 
    	for i=1, #schedule do
@@ -286,40 +286,40 @@ M.sortSchedule = function(schedule)
 	for i=1, #schedule do
  		if (schedule[i].day) == "wed" then
         	table.insert( tempSchedule[3], schedule[i] )
-        end	
+        end
 	end
 
 	for i=1, #schedule do
  		if (schedule[i].day) == "thu" then
         	table.insert( tempSchedule[4], schedule[i] )
-        end	
+        end
 	end
 
 	for i=1, #schedule do
  		if (schedule[i].day) == "fri" then
         	table.insert( tempSchedule[5], schedule[i] )
-        end	
+        end
 	end
 
 	for i=1, #schedule do
  		if (schedule[i].day) == "sat" then
         	table.insert( tempSchedule[6], schedule[i] )
-        end	
+        end
 	end
 
 	for i=1, #schedule do
  		if (schedule[i].day) == "sun" then
         	table.insert( tempSchedule[7], schedule[i] )
-        end	
+        end
 	end
 
    	-- sort days
-    for i=1, #tempSchedule do 
+    for i=1, #tempSchedule do
 	    if (tonumber(tempSchedule[i][1].time_offset) > tonumber(tempSchedule[i][2].time_offset) ) then
 	    	local temp = tempSchedule[i][1]
 	    	tempSchedule[i][1] = tempSchedule[i][2]
 	    	tempSchedule[i][2] = temp
-	    end	
+	    end
 	end
 
 
@@ -332,18 +332,18 @@ M.sortSchedule = function(schedule)
 	   	scheduleIndex = scheduleIndex + 1
 	   	schedule[scheduleIndex] =  tempSchedule[i][2]
 	   	scheduleIndex = scheduleIndex + 1
-   	end	
+   	end
 
    	-- Adjust to Calendar
     local s = 0
 
-    if (os.date( "%a" ) == "Mon") then s = 6 
-    elseif (os.date( "%a" ) == "Tue") then s = 5 
-    elseif (os.date( "%a" ) == "Wed") then s = 4 
-    elseif (os.date( "%a" ) == "Thu") then s = 3 
-    elseif (os.date( "%a" ) == "Fri") then s = 2 
-    elseif (os.date( "%a" ) == "Sat") then s = 1 
-    elseif (os.date( "%a" ) == "Sun") then s = 0     
+    if (os.date( "%a" ) == "Mon") then s = 6
+    elseif (os.date( "%a" ) == "Tue") then s = 5
+    elseif (os.date( "%a" ) == "Wed") then s = 4
+    elseif (os.date( "%a" ) == "Thu") then s = 3
+    elseif (os.date( "%a" ) == "Fri") then s = 2
+    elseif (os.date( "%a" ) == "Sat") then s = 1
+    elseif (os.date( "%a" ) == "Sun") then s = 0
     end
 
     for i = 1, s do
@@ -354,7 +354,7 @@ M.sortSchedule = function(schedule)
     end
 
 
-	
+
     -- return schedule
 	return schedule
 end
@@ -368,13 +368,13 @@ M.saveSchedule = function(schedule)
 
 	-- save data to disk, go to disclaimer
    fileName = io.open( appData.scheduleFilePath, "w" )
-   
+
    if fileName then
       fileName:write( encodedData )
       io.close( fileName )
    else
       native.showAlert( "System Error!", "Reinstall SammeVei, please.", { "OK" } )
-   end 
+   end
 end
 
 M.updateSchedule = function()
@@ -383,11 +383,11 @@ M.updateSchedule = function()
         if appData.schedule[i].is_enabled == false then
 
             print("------------------------------- this is i: "..i)
-            
+
 		    -- morning
 			appData.schedule[i].from_address_id = tostring(appData.addresses.home.address_id)
 			appData.schedule[i].to_address_id = tostring(appData.addresses.work.address_id)
-			
+
             local h = tonumber(string.sub(appData.user.morningTime, 1, 2))
             local m = tonumber(string.sub(appData.user.morningTime, 4, 5))
             local offset = h*60 + m
@@ -395,7 +395,7 @@ M.updateSchedule = function()
 			appData.schedule[i].time_offset = offset
 			appData.schedule[i].time_flex = tostring(tonumber(appData.user.morningFlexibility)/60)
 
-            
+
 			if appData.user.mode == "passenger" then
 				appData.schedule[i].mode = 1
 		    elseif appData.user.mode == "driver" then
@@ -403,24 +403,24 @@ M.updateSchedule = function()
 		    elseif appData.user.mode == "both" then
 				appData.schedule[i].mode = 3
 			end
-			
-	    end			  
+
+	    end
 
 		-- afternoon
 		if appData.schedule[i+1].is_enabled == false then
 
 			print("------------------------------- this is i: "..i+1)
-			
+
 			appData.schedule[i+1].from_address_id = tostring(appData.addresses.work.address_id)
 			appData.schedule[i+1].to_address_id = tostring(appData.addresses.home.address_id)
-			
+
 			local h = tonumber(string.sub(appData.user.afternoonTime, 1, 2))
 	        local m = tonumber(string.sub(appData.user.afternoonTime, 4, 5))
 	        local offset = h*60 + m
 	        offset = tostring(offset)
 			appData.schedule[i+1].time_offset = offset
 			appData.schedule[i+1].time_flex = tostring(tonumber(appData.user.afternoonFlexibility)/60)
-			
+
 			if appData.user.mode == "passenger" then
 				appData.schedule[i+1].mode = 1
 		    elseif appData.user.mode == "driver" then
@@ -429,9 +429,9 @@ M.updateSchedule = function()
 				appData.schedule[i+1].mode = 3
 			end
 
-		end			  	  			
-	end		
-end	
+		end
+	end
+end
 
 -- -----------------------------------------------------------------------------
 -- TIME
@@ -467,7 +467,7 @@ end
 M.calculateUTC = function(dayShift)
 
 	-- Translate days to seconds
-	dayShift = dayShift * 60*60*24 
+	dayShift = dayShift * 60*60*24
 
 	-- Define today's midnight
 	local y = os.date("%Y")
@@ -476,22 +476,23 @@ M.calculateUTC = function(dayShift)
 
 	-- Calculate today's midnight in secs
 	local time1 = os.time {
-		year = y, 
-		month = m, 
-		day = d, 
-		hour = 0, 
+		year = y,
+		month = m,
+		day = d,
+		hour = 0,
 		sec = 0
 	}
 
 	-- Calculate difference between actual timezone and UTC
-	local difference = 36 * os.date("%z")
+  local now = os.time()
+  local difference = os.difftime(now, os.time(os.date("!*t", now)))
 
 	-- Calculate today's midnight in UTC
 	time1 = time1 - difference
 
 	-- Add day shift
 	time1 = time1 + dayShift
-	
+
 	-- Add trip time // to improve later
 	local time_offset
     time_offset = 480
@@ -519,7 +520,7 @@ M.calculateTransportUTC = function(dayShift, dayPart, i)
 	-- print("========================CALCULATING TransportUTC =================================")
 
 	-- Translate days to seconds
-	dayShift = dayShift * 60*60*24 
+	dayShift = dayShift * 60*60*24
 
 	-- Define today's midnight
 	local y = os.date("%Y")
@@ -528,10 +529,10 @@ M.calculateTransportUTC = function(dayShift, dayPart, i)
 
 	-- Calculate today's midnight in secs
 	local time1 = os.time {
-		year = y, 
-		month = m, 
-		day = d, 
-		hour = 0, 
+		year = y,
+		month = m,
+		day = d,
+		hour = 0,
 		sec = 0
 	}
 
@@ -543,7 +544,7 @@ M.calculateTransportUTC = function(dayShift, dayPart, i)
 
 	-- Add day shift
 	time1 = time1 + dayShift
-	
+
 	-- Add trip time
 	local time_offset
 
@@ -576,7 +577,7 @@ M.calculateChangedTransportUTC = function(dayShift, dayPart, time_offset)
     time_offset = tonumber(time_offset)
 
 	-- Translate days to seconds
-	dayShift = dayShift * 60*60*24 
+	dayShift = dayShift * 60*60*24
 
 	-- Define today's midnight
 	local y = os.date("%Y")
@@ -585,10 +586,10 @@ M.calculateChangedTransportUTC = function(dayShift, dayPart, time_offset)
 
 	-- Calculate today's midnight in secs
 	local time1 = os.time {
-		year = y, 
-		month = m, 
-		day = d, 
-		hour = 0, 
+		year = y,
+		month = m,
+		day = d,
+		hour = 0,
 		sec = 0
 	}
 
@@ -661,13 +662,13 @@ M.saveTransports = function()
 
 	-- save data to disk, go to disclaimer
    fileName = io.open( appData.transportFilePath, "w" )
-   
+
    if fileName then
       fileName:write( encodedData )
       io.close( fileName )
    else
       native.showAlert( "System Error!", "Reinstall SammeVei, please.", { "OK" } )
-   end 
+   end
 
 
    	-- encode table to json
@@ -676,13 +677,13 @@ M.saveTransports = function()
 
 	-- save data to disk, go to disclaimer
    fileName = io.open( appData.transportsFilePath, "w" )
-   
+
    if fileName then
       fileName:write( encodedData )
       io.close( fileName )
    else
       native.showAlert( "System Error!", "Reinstall SammeVei, please.", { "OK" } )
-   end 
+   end
 end
 
 -- Save Match
@@ -690,25 +691,25 @@ M.saveMatch = function(match)
 
 	-- encode table to json
     encodedData = appData.json.encode( match )
-    
+
     print("match saved")
 
 	-- save data to disk, go to disclaimer
    fileName = io.open( appData.matchFilePath, "w" )
-   
+
    if fileName then
       fileName:write( encodedData )
       io.close( fileName )
    else
       native.showAlert( "System Error!", "Reinstall SammeVei, please.", { "OK" } )
-   end 
+   end
 end
 
 -- -----------------------------------------------------------------------------
 -- ADDRESES
 -- -----------------------------------------------------------------------------
 
--- Adjust addresses 
+-- Adjust addresses
 M.adjustAddresses = function()
 	print("-------- adjusting -------")
 	appData.addressList[1] = appData.addresses.home
@@ -723,29 +724,29 @@ M.saveAddressList = function()
 
 	-- save data to disk, go to disclaimer
    fileName = io.open( appData.addressListFilePath, "w" )
-   
+
    if fileName then
       fileName:write( encodedData )
       io.close( fileName )
    else
       native.showAlert( "System Error!", "Reinstall SammeVei, please.", { "OK" } )
-   end 
+   end
 end
 
 -- Update Addresses
 M.updateAdresses = function(location, lat, lon, address)
    print("updating addresses -------------------------")
-   
+
 
     if (location == "from") then
         appData.tempAddresses.home.location = lon..","..lat
         appData.tempAddresses.home.address = address
-    elseif (location == "to") then  
+    elseif (location == "to") then
         appData.tempAddresses.work.location = lon..","..lat
         appData.tempAddresses.work.address = address
 
-        
-    end 
+
+    end
 end
 
 -- updateAddressID
@@ -762,7 +763,7 @@ M.updateAdressID = function(location, id)
         -- update addressList
         table.insert(appData.addressList, appData.tempAddresses.home)
 
-    elseif (location == "to") then  
+    elseif (location == "to") then
 
         appData.tempAddresses.work.address_id = tostring(id)
         print("work updated: "..appData.addresses.work.address_id)
@@ -771,14 +772,14 @@ M.updateAdressID = function(location, id)
         -- appData.schedule[appData.i].to_address_id = id
 
         -- update addressList
-        table.insert(appData.addressList, appData.tempAddresses.work) 
-    end 
+        table.insert(appData.addressList, appData.tempAddresses.work)
+    end
 
     -- save addressList
     M.saveAddressList()
 
     -- Save Schedule
-    -- M.saveSchedule()   
+    -- M.saveSchedule()
 end
 
 
@@ -795,7 +796,7 @@ M.createDummyTransports = function()
 
         --- calculate UTC
         local integralPart, fractionalPart = math.modf( (i+1)/2 )
-        local dayPart 
+        local dayPart
         local dayShift = integralPart
 
         if fractionalPart == 0 then dayPart = "m" end
@@ -805,27 +806,27 @@ M.createDummyTransports = function()
         -- print("Day Part  = "..dayPart)
         -- print("i  = "..i)
 
-        local utcTime = M.calculateTransportUTC(dayShift, dayPart, i) 
+        local utcTime = M.calculateTransportUTC(dayShift, dayPart, i)
         -- print(utcTime.." ===============")
         -- print(dayPart.." ===============")
 
         -- adjust addresses
-	    local from_address 
+	    local from_address
 		local from_location
-	    local to_address 
+	    local to_address
 		local to_location
 
-        if dayPart == "m" then 
-	        from_address = appData.addresses.home.name 
-		    from_location = appData.addresses.home.location 
-	        to_address = appData.addresses.work.name 
-		    to_location = appData.addresses.work.location 
+        if dayPart == "m" then
+	        from_address = appData.addresses.home.name
+		    from_location = appData.addresses.home.location
+	        to_address = appData.addresses.work.name
+		    to_location = appData.addresses.work.location
 	    elseif dayPart == "a" then
-	        from_address = appData.addresses.work.name  
-		    from_location = appData.addresses.work.location 
-	        to_address = appData.addresses.home.name 
-		    to_location = appData.addresses.home.location 
-	    end 
+	        from_address = appData.addresses.work.name
+		    from_location = appData.addresses.work.location
+	        to_address = appData.addresses.home.name
+		    to_location = appData.addresses.home.location
+	    end
 
         -- print(from_address.." ===============")
 
@@ -840,14 +841,14 @@ M.createDummyTransports = function()
 	         event = "null",
 	         flexibility =  tostring(tonumber(appData.schedule[i].time_flex)*60),
 	         matches = {},
-	         owner = { 
+	         owner = {
 	             firstname = appData.user.firstName,
 	             id = appData.user.id,
-	             user_id = appData.user.userID 
+	             user_id = appData.user.userID
 	        },
 	         position = {
 	             coordinates = { "10.7636079, 59.9190099"},
-	             type =  "Point" 
+	             type =  "Point"
 	        },
 	         rate = "0",
 	         route = {
@@ -856,13 +857,13 @@ M.createDummyTransports = function()
 	             from_address =  from_address,
 	             from_location = {
 	                 coordinates = {from_location},
-	                 type =  "Point" 
+	                 type =  "Point"
 	            },
 	             id = "14159",
 	             to_address =  to_address,
 	             to_location = {
 	                 coordinates = {to_location},
-	                 type =  "Point" 
+	                 type =  "Point"
 	            }
 	        },
 	         route_id =  "",
@@ -878,7 +879,7 @@ M.createDummyTransports = function()
 	    	appData.dummyTransports[i].vehicle.id = "0"
 	    else
 	    	appData.dummyTransports[i].vehicle.id = "9"
-	    end 	
+	    end
 
 	    -- Save Dummy Transports --------------------------------------
 	    -- encode table to json
@@ -887,14 +888,14 @@ M.createDummyTransports = function()
 
 		-- save data to disk, go to disclaimer
 	   fileName = io.open( appData.dummyTransportsFilePath, "w" )
-	   
+
 	   if fileName then
 	      fileName:write( encodedData )
 	      io.close( fileName )
 	   else
 	      native.showAlert( "System Error!", "Reinstall SammeVei, please.", { "OK" } )
-	   end 
-    end		
+	   end
+    end
 end
 
 
@@ -911,9 +912,9 @@ M.updateDummyTransports = function()
         local date_original
         local day_original
         local hour_original
-        
-        local date_downloaded 
-        local day_downloaded        
+
+        local date_downloaded
+        local day_downloaded
         local hour_downloaded
 
         local dayPart = "m"
@@ -931,8 +932,8 @@ M.updateDummyTransports = function()
             -- print("day_original ------------ "..day_original)
             -- print("day_downloaded ------------ "..day_downloaded)
 
-	    	if day_original == day_downloaded 
-	    		and hour_original <= 12 
+	    	if day_original == day_downloaded
+	    		and hour_original <= 12
 	    		and hour_downloaded <= 12 then
 
 	    		-- print("======================== THESE TRANSPORTS ARE MORNING EQUAL! "..i.." - "..j)
@@ -940,10 +941,10 @@ M.updateDummyTransports = function()
                 table.remove(appData.dummyTransports, i)
                 table.insert(appData.dummyTransports, i, appData.transports[j])
                 -- print("======================== THESE TRANSPORTS WERE UPDATED! "..i.." - "..j)
-	        end	
+	        end
 
-	    	if day_original == day_downloaded 
-	    		and hour_original > 12 
+	    	if day_original == day_downloaded
+	    		and hour_original > 12
 	    		and hour_downloaded > 12 then
 
 	    		-- print("======================== THESE TRANSPORTS ARE AFTERNOON EQUAL! "..i.." - "..j)
@@ -951,8 +952,8 @@ M.updateDummyTransports = function()
                 table.remove(appData.dummyTransports, i)
                 table.insert(appData.dummyTransports, i, appData.transports[j])
                 -- print("======================== THESE TRANSPORTS WERE UPDATED! "..i.." - "..j)
-	        end	
-	    end 	
+	        end
+	    end
 	end
 
 	-- Save Dummy Transports --------------------------------------
@@ -962,14 +963,14 @@ M.updateDummyTransports = function()
 
 	-- save data to disk, go to disclaimer
    fileName = io.open( appData.dummyTransportsFilePath, "w" )
-   
+
    if fileName then
       fileName:write( encodedData )
       io.close( fileName )
    else
       native.showAlert( "System Error!", "Reinstall SammeVei, please.", { "OK" } )
-   end 
-   	
+   end
+
 end
 
 -- -----------------------------------------------------------------------------
