@@ -159,10 +159,10 @@ M.showMap = function()
     local notification = appData.json.decode(appData.notification)
     print(notification)
 
-    myDeparture.lt = notification.transport.passenger.from.location.coordinates[1]
-    myDeparture.ln = notification.transport.passenger.from.location.coordinates[2]
-    myDestination.lt = notification.transport.passenger.to.location.coordinates[1]
-    myDestination.ln = notification.transport.passenger.to.location.coordinates[2]
+    myDeparture.lt = notification.transport.passenger.from.location.coordinates[2]
+    myDeparture.ln = notification.transport.passenger.from.location.coordinates[1]
+    myDestination.lt = notification.transport.passenger.to.location.coordinates[2]
+    myDestination.ln = notification.transport.passenger.to.location.coordinates[1]
 
 	routines.createMap(myDeparture.lt, myDeparture.ln, myDestination.lt, myDestination.ln)
 

@@ -163,9 +163,7 @@ local goFurther = function()
         }
 
         appData.composer.removeScene( "controller.IntroController" )
-        -- for showing new screen
-        appData.composer.gotoScene( "controller.PurposalController", options )
-        -- appData.composer.gotoScene( "controller.GreetingController", options )
+        appData.composer.gotoScene( "controller.GreetingController", options )
     else
         iterations = iterations + 1
         print("ITERATION: "..iterations)

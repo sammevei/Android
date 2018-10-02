@@ -16,6 +16,7 @@ else
 	appData.useNotifications = true
 end
 
+-- comment before making build
 appData.developerMode = false
 -- ---------------------------------------------------------------------------- --
 
@@ -681,5 +682,9 @@ end
 -- --------------------------------------------------------------------------------------
 
 -- Load the first screen
-appData.composer.gotoScene( "controller.IntroController" )
+-- for showing new screen
+appData.composer.gotoScene( "controller.PurposalController", options )
+-- appData.composer.gotoScene( "controller.IntroController" )
+
+
 -- appData.composer.gotoScene("controller.CreateTransportController")
