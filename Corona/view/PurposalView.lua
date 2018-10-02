@@ -16,7 +16,7 @@ end
 
 -- show header
 M.showHeader = function()
-  local notificationObject = appData.json.decode(appData.notification)
+  local notificationObject = appData.notification
 
   -- header
   local titleString
@@ -139,9 +139,9 @@ M.showFooter = function(matched)
       }
   )
 
-    M.neiButton.anchorX = 0;
+  M.neiButton.anchorX = 0;
 	M.neiButton.x = appData.margin*2
-    M.neiButton.alpha = 0.9
+  M.neiButton.alpha = 0.9
 	M.footerGroup:insert( M.neiButton )
 
 	-- final adjustments
@@ -156,15 +156,14 @@ M.showMap = function()
     local myDeparture = {lt, ln}
     local myDestination = {lt, ln}
 
-    local notification = appData.json.decode(appData.notification)
-    print(notification)
+    local notification = appData.notification
 
-    myDeparture.lt = notification.transport.passenger.from.location.coordinates[1]
-    myDeparture.ln = notification.transport.passenger.from.location.coordinates[2]
-    myDestination.lt = notification.transport.passenger.to.location.coordinates[1]
-    myDestination.ln = notification.transport.passenger.to.location.coordinates[2]
+    myDeparture.lt = notification.transport.passenger.from.location.coordinates[2]
+    myDeparture.ln = notification.transport.passenger.from.location.coordinates[1]
+    myDestination.lt = notification.transport.passenger.to.location.coordinates[2]
+    myDestination.ln = notification.transport.passenger.to.location.coordinates[1]
 
-	routines.createMap(myDeparture.lt, myDeparture.ln, myDestination.lt, myDestination.ln)
+	  routines.createMap(myDeparture.lt, myDeparture.ln, myDestination.lt, myDestination.ln)
 
     local lon1 = "lon1="..myDeparture.ln
     local lat1 = "lat1="..myDeparture.lt

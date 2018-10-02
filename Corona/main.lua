@@ -16,6 +16,7 @@ else
 	appData.useNotifications = true
 end
 
+-- comment before making build
 appData.developerMode = false
 -- ---------------------------------------------------------------------------- --
 
@@ -63,7 +64,7 @@ appData.margin = 7
 appData.actionMargin = 15
 appData.actionCorner = 5
 
-appData.notification="{\"type\":\"trip-match-suggestion\",\"header\":\"Ole Christian tilbyr skyss\",\"body\":\"I morgen tidlig kl. 07:19\",\"locale\":\"no\",\"owner\":{\"id\":\"823\",\"name\":\"OleChristian\",\"ratings\":{\"likes\":0,\"dislikes\":0},\"trips\":{\"posted\":0,\"matched\":0}},\"transport\":{\"id\":\"8349f21d-cf8e-48d1-8c5b-58554261f212\",\"mode\":\"driver\",\"driver\":{\"from\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.8129668\",\"59.9371167\"]}},\"to\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.7169352\",\"59.9421169\"]}}},\"passenger\":{\"from\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.8054568\",\"59.9320748\"]}},\"to\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.7160912\",\"59.9421982\"]}}},\"distance\":8421.3,\"duration\":733.1,\"route\":0,\"price\":{\"amount\":0,\"currency\":\"NOK\"},\"pickup\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.8054568\",\"59.9320748\"]},\"time\":\"2018-08-30T05:19:00.000Z\"},\"dropoff\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.716034\",\"59.943106\"]}},\"matching_code\":\"f677e7d4-704b-3298-80bd-1732bf4b35ce\",\"route_id\":\"26771\"},\"proposal_id\":\"4c56e623-c360-4988-8944-d89f42aba18e\"}"
+-- appData.notification="{\"type\":\"trip-match-suggestion\",\"header\":\"Ole Christian tilbyr skyss\",\"body\":\"I morgen tidlig kl. 07:19\",\"locale\":\"no\",\"owner\":{\"id\":\"823\",\"name\":\"OleChristian\",\"ratings\":{\"likes\":0,\"dislikes\":0},\"trips\":{\"posted\":0,\"matched\":0}},\"transport\":{\"id\":\"8349f21d-cf8e-48d1-8c5b-58554261f212\",\"mode\":\"driver\",\"driver\":{\"from\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.8129668\",\"59.9371167\"]}},\"to\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.7169352\",\"59.9421169\"]}}},\"passenger\":{\"from\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.8054568\",\"59.9320748\"]}},\"to\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.7160912\",\"59.9421982\"]}}},\"distance\":8421.3,\"duration\":733.1,\"route\":0,\"price\":{\"amount\":0,\"currency\":\"NOK\"},\"pickup\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.8054568\",\"59.9320748\"]},\"time\":\"2018-08-30T05:19:00.000Z\"},\"dropoff\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.716034\",\"59.943106\"]}},\"matching_code\":\"f677e7d4-704b-3298-80bd-1732bf4b35ce\",\"route_id\":\"26771\"},\"proposal_id\":\"4c56e623-c360-4988-8944-d89f42aba18e\"}"
 
 -- App Setup Colors
 appData.colors = {
@@ -634,10 +635,10 @@ Runtime:addEventListener( "system", onResume )
 -- --------------------------------------------------------------------------------------
 -- NOTIFICATIONS
 -- --------------------------------------------------------------------------------------
+-- appData.notification=appData.json.decode("{\"type\":\"trip-match-suggestion\",\"header\":\"Ole Christian tilbyr skyss\",\"body\":\"I morgen tidlig kl. 07:19\",\"locale\":\"no\",\"owner\":{\"id\":\"823\",\"name\":\"OleChristian\",\"ratings\":{\"likes\":0,\"dislikes\":0},\"trips\":{\"posted\":0,\"matched\":0}},\"transport\":{\"id\":\"8349f21d-cf8e-48d1-8c5b-58554261f212\",\"mode\":\"driver\",\"driver\":{\"from\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.8129668\",\"59.9371167\"]}},\"to\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.7169352\",\"59.9421169\"]}}},\"passenger\":{\"from\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.8054568\",\"59.9320748\"]}},\"to\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.7160912\",\"59.9421982\"]}}},\"distance\":8421.3,\"duration\":733.1,\"route\":0,\"price\":{\"amount\":0,\"currency\":\"NOK\"},\"pickup\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.8054568\",\"59.9320748\"]},\"time\":\"2018-08-30T05:19:00.000Z\"},\"dropoff\":{\"location\":{\"type\":\"Point\",\"coordinates\":[\"10.716034\",\"59.943106\"]}},\"matching_code\":\"f677e7d4-704b-3298-80bd-1732bf4b35ce\",\"route_id\":\"26771\"},\"proposal_id\":\"4c56e623-c360-4988-8944-d89f42aba18e\"}")
+appData.showProposal = false
 
 local function notificationListener( event )
-
-	local data
 
     if ( event.type == "remote" ) then
 
@@ -646,28 +647,26 @@ local function notificationListener( event )
     	-- printTable(event)
 
         if event.androidPayload.data ~= nil then
-    	 	data = appData.json.decode(event.androidPayload.data)
+        	print(event.androidPayload.data)
+    	 	appData.notification = appData.json.decode(event.androidPayload.data)
     	end
 
-    	print("================ DATA ===============")
+    	print("================ NOTIFICATION DATA ===============")
 
-    	if data ~= nil then
-    		if data.type ~= nil then
-		    	print(data.type)
+    	if appData.notification ~= nil then
+    		if appData.notification.type ~= nil then
+    			print(appData.notification.type)
+    			if appData.notification.type == "trip-match-suggestion" then
+    				appData.showProposal = true
+		    	end
 		    end
 
-		    if data.body ~= nil then
-		    	print(data.body)
-
-		    	local alert = native.showAlert(
-		            "",
-		            data.body,
-		            { "OK", "" }
-		            )
+		    if appData.notification.body ~= nil then
+		    	print(appData.notification.body)
 		    end
     	end
 
-        print("================ DATA ===============")
+        print("================ NOTIFICATION DATA ===============")
 
     elseif ( event.type == "local" ) then
     end
@@ -681,5 +680,7 @@ end
 -- --------------------------------------------------------------------------------------
 
 -- Load the first screen
+-- for showing new screen
+
 appData.composer.gotoScene( "controller.IntroController" )
 -- appData.composer.gotoScene("controller.CreateTransportController")

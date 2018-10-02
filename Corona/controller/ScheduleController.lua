@@ -186,6 +186,7 @@ local addTransport
 local getTransports
 local refreshTable
 local addTrip
+local showProposal
 
 -- Rating
 local showRating
@@ -209,6 +210,13 @@ end
 -- -----------------------------------------------------------------------
 -- Scene Function Declarations
 -- -----------------------------------------------------------------------
+showProposal = function()
+    if appData.showProposal == true then
+        appData.showProposal = false
+        appData.composer.showOverlay("controller.PurposalController")
+    end    
+end    
+
 
 showMap = function()
     -- print(tostring(appData.showingMap))
@@ -242,7 +250,7 @@ appData.transportBarListeners = function(bar)
     view.rowBar[bar]:addEventListener( "tap", onRowBar ) 
 
     if appData.transports[bar].matches[1] ~= nil then
-        print("_____ ______ ______ ______ _____ "..bar)
+        -- print("_____ ______ ______ ______ _____ "..bar)
         view.transportPhones[bar]:addEventListener( "tap", onCall ) 
         view.transportChats[bar]:addEventListener( "tap", onChat )  
     end    
@@ -6223,7 +6231,8 @@ function scene:show( event )
         t12 = timer.performWithDelay( 10000, checkGPS, 1) 
         t13 = timer.performWithDelay( 2000, showScene, -1)
         t14 = timer.performWithDelay( 200, showRating, -1)
-        t15 = timer.performWithDelay( 200, hideTrip, -1) 
+        t15 = timer.performWithDelay( 200, hideTrip, -1)
+        t16 = timer.performWithDelay( 2000, showProposal, -1) 
 
         if appData.transports[1] == nil then 
             -- view.showFirstTransport()
@@ -6238,9 +6247,7 @@ function scene:show( event )
     appData.appIsRunning = true
 
     Runtime:addEventListener( "enterFrame", refreshTable )
-    Runtime:addEventListener( "enterFrame", showMap )   
-
-    -- Runtime:addEventListener( "enterFrame", transportBarListeners )
+    Runtime:addEventListener( "enterFrame", showMap )
 end
  
 -- hide()
@@ -6268,6 +6275,7 @@ function scene:hide( event )
         timer.cancel( t13 )
         timer.cancel( t14 )
         timer.cancel( t15 )
+        timer.cancel( t16 )
         print("THE SCENE WILL HIDE")
  
     elseif ( phase == "did" ) then

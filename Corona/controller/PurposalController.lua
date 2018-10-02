@@ -17,14 +17,41 @@ local routines = require( "misc.appRoutines" )
 
 local onKeyEvent = function( event )
     if ( event.keyName == "back" ) then
-        appData.composer.hideOverlay()
-        return true
+        -- appData.showingMap = true
+        -- appData.composer.hideOverlay()
+        -- return true
     end
 end
 
 local hideTransportDetails = function(event)
     appData.showingMap = true
+    appData.transportDetails = 0
+    appData.appIsRunning = true
     appData.composer.hideOverlay()
+    return true
+end
+
+local acceptProposal = function(event)
+    -- access API
+
+
+    -- hide proposal
+    appData.showingMap = true
+    appData.transportDetails = 0
+    appData.appIsRunning = true
+    appData.composer.hideOverlay()
+    return true
+end
+
+local rejectProposal = function(event)
+    -- access API
+
+    -- hide proposal
+    appData.showingMap = true
+    appData.transportDetails = 0
+    appData.appIsRunning = true
+    appData.composer.hideOverlay()
+    return true
 end
 -- Scene components
 -- -----------------------------------------------------------------------------------
@@ -55,6 +82,8 @@ function scene:show( event )
 
 
     elseif ( phase == "did" ) then
+        view.jaButton:addEventListener( "tap", acceptProposal )
+        view.neiButton:addEventListener( "tap", rejectProposal )        
     end
 end
 

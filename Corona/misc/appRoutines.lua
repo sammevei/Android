@@ -110,17 +110,17 @@ end
 
 M.localToWeekday = function(y, m, d, h, s)
 
-    -- takes local year, month, day, hour and minutes as numbers or strings, 
+    -- takes local year, month, day, hour and minutes as numbers or strings,
     -- calculates UTC time and outputs in 2018-01-18T07:30:00.000Z format
 
 	local utcTime = ""
 
 	-- translate to seconds
 	local time1 = os.time {
-		year = tonumber(y), 
-		month = tonumber(m), 
-		day = tonumber(d), 
-		hour = tonumber(h), 
+		year = tonumber(y),
+		month = tonumber(m),
+		day = tonumber(d),
+		hour = tonumber(h),
 		sec = tonumber(s)
 	}
 
@@ -216,86 +216,89 @@ M.createMap = function(lat1, lon1, lat2, lon2)
 	------------------------
 
 	local mapString = [[
-		<html>
-		<head>
-		<meta charset=utf-8 />
-		<title>A simple map</title>
-		<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-		<script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
-		<script src='http://silver.tf/libraries/mb_directions.js'></script>
-		<link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
-		<style>
-		  body { margin:0; padding:0; }
-		  #map { position:absolute; top:0; bottom:0; width:100%; }
-		</style>
-		</head>
-		<body>
+  <html>
+  <head>
+  <meta charset=utf-8 />
+  <title>A simple map</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
+  <script src='http://silver.tf/libraries/mb_directions.js'></script>
+  <link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+  <style>
+    body { margin:0; padding:0; }
+    #map { position:absolute; top:0; bottom:0; width:100%; }
+  </style>
+  </head>
+  <body>
 
-		<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/L.Control.Locate.min.js'></script>
-		<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/L.Control.Locate.mapbox.css' rel='stylesheet' />
-		<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.43.0/css/font-awesome.min.css' rel='stylesheet' />
+  <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.49.0/L.Control.Locate.min.js'></script>
+  <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.49.0/L.Control.Locate.mapbox.css' rel='stylesheet' />
+  <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.49.0/css/font-awesome.min.css' rel='stylesheet' />
 
-		<div id='map'></div>
-		<script>
+  <div id='map'></div>
+  <script>
 
-		// [1] INCLUDE LISTENER =====================================================================
-		function getURLParameter(name) {
-            return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href)||[,""])[1].replace(/\+/g, '%20'))||null;
-        }
-        // ======================================================================================= //
+  L.mapbox.accessToken = 'pk.eyJ1Ijoib2NoZWxzZXQiLCJhIjoiY2ltbmZqbXA4MDAxdXgza3E2OW44ZzZ2NyJ9.Kgl_Fc5Gu2QnpXcvL9UXRQ';
 
+  var start = {lat: ]]..lat1..[[, lon: ]]..lon1..[[};
+  var finish = {lat: ]]..lat2..[[, lon: ]]..lon2..[[};
 
-        // ========================================================================================== //
+  var originLatLng = [start.lon, start.lat];
+  var destinationLatLng = [finish.lon, finish.lat];
 
-		L.mapbox.accessToken = 'pk.eyJ1Ijoib2NoZWxzZXQiLCJhIjoiY2ltbmZqbXA4MDAxdXgza3E2OW44ZzZ2NyJ9.Kgl_Fc5Gu2QnpXcvL9UXRQ';
-
-		// example origin and destination
-		var start = {lat: ]]..lat1..[[, lon: ]]..lon1..[[};
-		var finish = {lat: ]]..lat2..[[, lon: ]]..lon2..[[};
-
-		// [2] GET VARIABLES =====================================================================
-		start.lat = getURLParameter("lat1")
-		start.lon = getURLParameter("lon1")
-		finish.lat = getURLParameter("lat2")
-		finish.lon = getURLParameter("lon2")
-		// =======================================================================================
-
-        // [3] CENTER MAP ========================================================================
-		var map = L.mapbox.map('map', 'mapbox.streets', {
-		    zoomControl: false }).setView([start.lat, start.lon], 9);
-		// =======================================================================================
+  var zoom = 9;
 
 
-        // STYLE ================================================ //
+  var map = L.mapbox.map('map', 'mapbox.streets', {zoomControl: false}).setView([start.lat, start.lon], zoom);
 
-		// L.mapbox.tileLayer('https://api.mapbox.com/v3/mapbox.dark.json').addTo(map);
+  var geoJson = {
+      type: "FeatureCollection",
+      features: [
+          {
+              type: "Feature",
+              properties: {
+                  "title": 'Origin',
+                  "marker-color": "#191D38",
+                  "marker-symbol":"circle-stroked",
+                  "marker-size": "medium",
+                  route: {id: 1, type: "origin", points: 2}
+              },
+              geometry: {
+                  type: "Point",
+                  coordinates: originLatLng}
+          },{
+              type: "Feature",
+              properties: {
+                  "title": 'Destination',
+                  "marker-color": "#191D38",
+                  "marker-symbol":"circle-stroked",
+                  "marker-size":"medium",
+                  route: {id: 2, type: "destination", points: 3}
+              },
+              geometry: {
+                  type: "Point",
+                  coordinates: destinationLatLng
+              }
+          }
+      ]
+  };
 
-		// map.attributionControl.setPosition('bottomleft');
-		var directions = L.mapbox.directions({
-		    profile: 'mapbox.driving'
-		});
+  var origin = geoJson.features[0];
+  var destination = geoJson.features[1];
 
-		// [4] DRAW DIRECTIONS ===================================================================
-		// Set the origin and destination for the direction and call the routing service
-		directions.setOrigin(L.latLng(start.lat, start.lon));
-		directions.setDestination(L.latLng(finish.lat, finish.lon));
-		// =======================================================================================
+  // = L.mapbox.directions({profile: 'mapbox.driving'})
+  var directions = L.mapbox.directions();
+  var directionsLayer = L.mapbox.directions.layer(directions).addTo(map);
+  var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions).addTo(map);
+  directions.setOrigin(origin).setDestination(destination).query();
 
-		directions.query();
+  var myLayer = L.mapbox.featureLayer().addTo(map);
+  myLayer.setGeoJSON(geoJson);
+  map.scrollZoom.disable();
 
-        if (start.lon != 10.70) {
-			var directionsLayer = L.mapbox.directions.layer(directions).addTo(map);
-			var directionsRoutesControl = L.mapbox.directions.routesControl('routes', directions)
-		    	.addTo(map);
-		}
-
-		// ========================================================================================== //
-
-		// L.control.locate().addTo(map);
-
-		</script>
-		</body>
-		</html>]]
+  </script>
+  </body>
+  </html>]]
 
 	--This string is the text that will be written to our HTML file.
 

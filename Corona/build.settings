@@ -1,9 +1,9 @@
 settings =
 {
-    splashScreen = 
-    {
-        enable = false
-    },
+    --splashScreen =
+    --{
+        --enable = true
+    --},
 
     orientation = {
         default = "portrait",
@@ -29,15 +29,15 @@ settings =
         -- ["plugin.facebook.v4a"] = {
         --     publisherId = "com.coronalabs"
         -- },
-    }, 
+    },
 
 
 	android =
 	{
-        -- versionCode = "4023", -- this is version 4.023
-        -- versionCode = "33", -- this is version 33.0
-        versionCode = "4001", -- this is version 4.0.1
-        
+       -- versionCode = "4000", -- this is version 4.023
+       -- versionCode = "4.0.0", -- this is version 33.0
+       versionCode = "4009", -- this is version 4.0.9
+
 		useGoogleServicesJson = true,
         usesPermissions =
 		{
