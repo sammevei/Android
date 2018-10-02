@@ -295,10 +295,16 @@ M.createMap = function(lat1, lon1, lat2, lon2)
   var myLayer = L.mapbox.featureLayer().addTo(map);
   myLayer.setGeoJSON(geoJson);
   map.scrollZoom.disable();
+  map.touchZoom.disable();
+  map.doubleClickZoom.disable();
+  map.scrollWheelZoom.disable();
+  map.boxZoom.disable();
+  map.keyboard.disable();
 
   </script>
   </body>
-  </html>]]
+  </html>
+]]
 
 	--This string is the text that will be written to our HTML file.
 
